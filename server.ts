@@ -1,9 +1,10 @@
 import express from "express";
 import { Server } from 'socket.io';
 import http from 'http';
+import { config } from "./config/config.js";
 
 const app = express();
-const port = 8080;
+const port = config.port;
 
 // create a HTTP server object
 const server = http.createServer(app);
