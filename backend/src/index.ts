@@ -10,7 +10,13 @@ const port = env.port;
 const server = http.createServer(app);
 
 // initialize a new instance of socket.io
-const io = new Server(server);
+// TODO: need to enable cors for dev env
+const io = new Server(server, {
+    cors: {
+        origin: env.clientUrl,
+        // credentials: true
+    }
+});
 
 app.get("/", (req, res) => {
     res.send("Hello World!");
