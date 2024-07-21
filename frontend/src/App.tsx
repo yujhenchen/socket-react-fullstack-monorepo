@@ -6,7 +6,7 @@ import { socket } from "./socket";
 import { ConnectionState } from "./components/ConnectionState";
 import { ConnectionManager } from "./components/ConnectionManager";
 import { Events } from "./components/Events";
-// import { MyForm } from "./components/MyForm";
+import { MyForm } from "./components/MyForm";
 
 function App() {
   const [isConnected, setIsConnected] = useState<boolean>(socket.connected);
@@ -53,7 +53,7 @@ function App() {
       <ConnectionState isConnected={isConnected} />
       <Events events={fooEvents} />
       <ConnectionManager />
-      {/* <MyForm /> */}
+      <MyForm />
     </div>
   );
 }
