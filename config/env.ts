@@ -16,4 +16,6 @@ if (!envServer.success) {
     // process.exit(1);  // won't reach here
 }
 
-export const config = envServer.data;
+export const env = envServer.data;
+
+export type Environment = z.infer<typeof envSchema>;
