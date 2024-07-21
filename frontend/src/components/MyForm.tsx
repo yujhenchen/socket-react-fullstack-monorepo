@@ -11,7 +11,7 @@ export function MyForm() {
     setIsLoading(true);
 
     try {
-      socket.timeout(5000).emit("create-something", value, () => {
+      socket.timeout(500).emit("send_msg", value, () => {
         setIsLoading(false);
       });
     } catch (error) {
