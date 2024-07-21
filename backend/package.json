@@ -18,6 +18,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "socket.io": "^4.7.5",
     "zod": "^3.23.8"
