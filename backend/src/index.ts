@@ -26,7 +26,10 @@ app.get("/", (req, res) => {
 
 // listen on the connection event for incoming sockets
 io.on('connection', (socket) => {
-    console.log('a user connected');
+    console.log('a user connected', socket.id);
+    socket.on("send_msg", (data) => {
+        console.log(data);
+    })
 });
 
 server.listen(port, () => {
