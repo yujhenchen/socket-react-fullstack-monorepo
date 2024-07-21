@@ -1,12 +1,19 @@
 import { z } from 'zod';
 
-const envVarsSchema = z.object({
-    SERVER_PORT: z.number().default(3000)
+const envSchema = z.object({
+    env: z.enum(['development', 'production', 'test']).default('development'),
+    port: z.number().default(3000)
 });
 
-// TODO: use the right way to validate schema and handle errors
-const envVars = envVarsSchema.parse(process.env);
+const envServer = envSchema.safeParse({
+    env: process.env.NODE_ENV,
+    port: process.env.SERVER_PORT,
+});
 
-export const config = {
-    port: envVars.SERVER_PORT,
-};
+if (!envServer.success) {
+    console.error(envServer.error.issues);
+    throw new Error('There is an error with the server environment variables');
+    // process.exit(1);  // won't reach here
+}
+
+export const config = envServer.data;
