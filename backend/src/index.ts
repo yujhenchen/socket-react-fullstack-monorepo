@@ -13,7 +13,6 @@ app.use(cors());
 const server = http.createServer(app);
 
 // initialize a new instance of socket.io
-// TODO: need to enable cors for dev env
 const io = new Server(server, {
     cors: {
         origin: env.clientUrl,
