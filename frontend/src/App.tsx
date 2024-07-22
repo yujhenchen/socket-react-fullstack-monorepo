@@ -9,7 +9,7 @@ import { Events } from "./components/Events";
 import { MyForm } from "./components/MyForm";
 
 function App() {
-  const [isConnected, setIsConnected] = useState<boolean>(socket.connected);
+  const [isConnected, setIsConnected] = useState<boolean>(socket.connected); // the state is wrong, it shows false while staying in connection
   const [fooEvents, setFooEvents] = useState<string[]>([]);
 
   useEffect(() => {
@@ -37,16 +37,20 @@ function App() {
   }, []);
 
   useEffect(() => {
+    setIsConnected(socket.connected);
+  }, [socket.connected]);
+
+  useEffect(() => {
     function onFooEvent(value: string) {
       setFooEvents((previous) => [...previous, value]);
     }
 
-    socket.on("foo", onFooEvent);
+    socket.on("receive_msg", onFooEvent);
 
     return () => {
-      socket.off("foo", onFooEvent);
+      socket.off("receive_msg", onFooEvent);
     };
-  }, [fooEvents]);
+  }, [socket, fooEvents]); // TODO: should monitor what for receive_msg event
 
   return (
     <div className="App">
