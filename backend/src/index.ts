@@ -27,9 +27,14 @@ app.get("/", (req, res) => {
 // listen on the connection event for incoming sockets
 io.on('connection', (socket) => {
     console.log('a user connected', socket.id);
-    socket.on("send_msg", (data) => {
-        console.log(data);
-        socket.broadcast.emit("receive_msg", data);
+    socket.on("send_msg", (data: string) => {
+        console.log(`data: ${data}`);
+        socket.broadcast.emit("receive_msg", data,
+            //     (err, responses) => {
+            //     console.log(err);
+            //     console.log(responses);
+            // }
+        ); // TODO: fix this seems failed
     });
 
     socket.on('disconnect', () => {
