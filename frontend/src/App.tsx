@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 // import "./App.css";
-import { socket } from "./socket";
+// import { socket } from "./socket";
 import { ConnectionState } from "./components/ConnectionState";
 import { ConnectionManager } from "./components/ConnectionManager";
 import { Events } from "./components/Events";
 import { MyForm } from "./components/MyForm";
 
-function App() {
+function App({ socket }) {
   const [isConnected, setIsConnected] = useState<boolean>(socket.connected); // the state is wrong, it shows false while staying in connection
-  const [fooEvents, setFooEvents] = useState<string[]>([]);
+  const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
     function onConnect() {
@@ -41,23 +41,23 @@ function App() {
   }, [socket.connected]);
 
   useEffect(() => {
-    function onFooEvent(value: string) {
-      setFooEvents((previous) => [...previous, value]);
+    function onMessageEvent(value: string) {
+      setMessages((previous) => [...previous, value]);
     }
 
-    socket.on("receive_msg", onFooEvent);
+    socket.on("receive_msg", onMessageEvent);
 
     return () => {
-      socket.off("receive_msg", onFooEvent);
+      socket.off("receive_msg", onMessageEvent);
     };
-  }, [socket, fooEvents]); // TODO: should monitor what for receive_msg event
+  }, [socket]); // TODO: should monitor what for receive_msg event
 
   return (
     <div className="App">
       <ConnectionState isConnected={isConnected} />
-      <Events events={fooEvents} />
+      <Events events={messages} />
       <ConnectionManager />
-      <MyForm />
+      <MyForm socket={socket} />
     </div>
   );
 }

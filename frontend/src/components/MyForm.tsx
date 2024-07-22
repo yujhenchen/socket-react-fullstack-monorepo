@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
-import { socket } from "../socket";
+// import { socket } from "../socket";
 
-export function MyForm() {
+export function MyForm({ socket }) {
   const [value, setValue] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<Error | null>(null);
@@ -11,9 +11,19 @@ export function MyForm() {
     setIsLoading(true);
 
     try {
-      socket.timeout(500).emit("send_msg", value, () => {
-        setIsLoading(false);
-      });
+      socket.emit(
+        "send_msg",
+        value
+        //   (err, response) => {
+        //   if (err) {
+        //     // the other side did not acknowledge the event in the given delay
+        //     console.error(err);
+        //   } else {
+        //     console.log(response);
+        //     setIsLoading(false);
+        //   }
+        // }
+      );
     } catch (error) {
       setIsLoading(false);
       if (error instanceof Error) setErrors(error);

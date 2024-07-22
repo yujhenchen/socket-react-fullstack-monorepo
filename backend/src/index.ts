@@ -27,14 +27,16 @@ app.get("/", (req, res) => {
 // listen on the connection event for incoming sockets
 io.on('connection', (socket) => {
     console.log('a user connected', socket.id);
-    socket.on("send_msg", (data: string) => {
-        console.log(`data: ${data}`);
-        socket.broadcast.emit("receive_msg", data,
-            //     (err, responses) => {
-            //     console.log(err);
-            //     console.log(responses);
-            // }
-        ); // TODO: fix this seems failed
+
+    socket.on("send_msg", (msg: string) => {
+        console.log(`msg: ${msg}`);
+        // socket.broadcast.emit("receive_msg", msg,
+        //     //     (err, responses) => {
+        //     //     console.log(err);
+        //     //     console.log(responses);
+        //     // }
+        // ); // TODO: fix this seems failed
+        io.emit('receive_msg', msg); // Broadcast the message to all connected clients
     });
 
     socket.on('disconnect', () => {
