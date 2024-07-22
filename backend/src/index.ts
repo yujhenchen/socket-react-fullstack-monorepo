@@ -30,12 +30,7 @@ io.on('connection', (socket) => {
 
     socket.on("send_msg", (msg: string) => {
         console.log(`msg: ${msg}`);
-        // socket.broadcast.emit("receive_msg", msg,
-        //     //     (err, responses) => {
-        //     //     console.log(err);
-        //     //     console.log(responses);
-        //     // }
-        // ); // TODO: fix this seems failed
+        // TODO: study the difference between `socket.broadcast.emit` and `io.emit`
         io.emit('receive_msg', msg); // Broadcast the message to all connected clients
     });
 
