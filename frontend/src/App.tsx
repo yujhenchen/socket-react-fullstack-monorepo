@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 // import "./App.css";
-// import { socket } from "./socket";
+import { socket } from "./socket";
 import { ConnectionState } from "./components/ConnectionState";
 import { ConnectionManager } from "./components/ConnectionManager";
 import { Events } from "./components/Events";
 import { MyForm } from "./components/MyForm";
 
-function App({ socket }) {
+function App() {
   const [isConnected, setIsConnected] = useState<boolean>(socket.connected); // the state is wrong, it shows false while staying in connection
   const [messages, setMessages] = useState<string[]>([]);
 
@@ -57,7 +57,7 @@ function App({ socket }) {
       <ConnectionState isConnected={isConnected} />
       <Events events={messages} />
       <ConnectionManager />
-      <MyForm socket={socket} />
+      <MyForm />
     </div>
   );
 }

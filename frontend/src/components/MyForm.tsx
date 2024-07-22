@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
-// import { socket } from "../socket";
+import { socket } from "../socket";
 
-export function MyForm({ socket }) {
+export function MyForm() {
   const [value, setValue] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<Error | null>(null);
@@ -24,6 +24,7 @@ export function MyForm({ socket }) {
         //   }
         // }
       );
+      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       if (error instanceof Error) setErrors(error);
