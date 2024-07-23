@@ -11,6 +11,7 @@ import { MyForm } from "./components/MyForm";
 function App() {
   const [isConnected, setIsConnected] = useState<boolean>(socket.connected); // the state is wrong, it shows false while staying in connection
   const [messages, setMessages] = useState<string[]>([]);
+  const [selectedValue, setSelectedValue] = useState<string>("");
 
   useEffect(() => {
     function onConnect() {
@@ -58,6 +59,11 @@ function App() {
       <Events events={messages} />
       <ConnectionManager />
       <MyForm />
+      <select value={selectedValue}>
+        <option value="dog">Dog</option>
+        <option value="cat">Cat</option>
+        <option value="hamster">Hamster</option>
+      </select>
     </div>
   );
 }
