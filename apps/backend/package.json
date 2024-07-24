@@ -2,26 +2,19 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "module": "src/index.ts",
-  "type": "module",
-  "scripts": {
-    "dev": "pnpm --hot src/index.ts",
-    "start": "pnpm src/index.ts",
-    "typecheck": "tsc --noEmit",
-    "test:coverage": "pnpm test --coverage",
-    "lint": "eslint src --ext .ts,.tsx",
-    "lint:fix": "eslint src --ext .ts,.tsx --fix"
-  },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/bun": "latest",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21"
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
   },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+  "scripts": {},
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.12",
+    "tslib": "^2.6.3",
+    "typescript": "^5.3.3"
   },
   "dependencies": {
     "cors": "^2.8.5",
