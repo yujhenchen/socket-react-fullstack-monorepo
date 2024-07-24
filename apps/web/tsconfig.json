@@ -1,4 +1,11 @@
 {
-  "extends": "@repo/typescript-config/vite.json",
-  "include": ["src"]
+  "extends": "@repo/typescript-config/base.json",
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }
