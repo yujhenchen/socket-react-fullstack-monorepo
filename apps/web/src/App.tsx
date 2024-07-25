@@ -1,6 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-// import reactLogo from "./assets/react.svg";
-// import viteLogo from "/vite.svg";
 import { socket } from "./socket";
 import { ConnectionState } from "./components/ConnectionState";
 import { ConnectionManager } from "./components/ConnectionManager";
@@ -66,7 +64,7 @@ function App() {
     return () => {
       socket.off("receive_msg", onMessageEvent);
     };
-  }, [socket]); // TODO: should monitor what for receive_msg event
+  }, [socket]);
 
   return (
     <main className="container min-h-screen mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-8">
