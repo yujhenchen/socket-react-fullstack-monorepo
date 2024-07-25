@@ -28,6 +28,7 @@ app.get("/", (req, res) => {
 io.on('connection', (socket) => {
     console.log('a user connected', socket.id);
 
+    // Handle message sending and receiving event
     socket.on("send_msg", (msg: string) => {
         console.log(`socket.id: ${socket.id}, msg: ${msg}`);
         // TODO: study the difference between `socket.broadcast.emit` and `io.emit`
@@ -35,25 +36,21 @@ io.on('connection', (socket) => {
         // socket.broadcast.emit('receive_msg', msg);    // Broadcast the message to all connected clients (except the sender)
     });
 
-    // TODO: how to handle boolean, client side HTML select component cannot handle expanding or not
-    // socket.on("dropdown_is_expanded", (isExpanded: boolean) => { 
-    //     console.log(`socket.id: ${socket.id}, isExpanded: ${isExpanded}`);
-
-    //     io.emit('receive_dropdown_is_expanded', isExpanded);
-    // });
-
+    // Handle dropdown selected value event
     socket.on("dropdown_selected_value", (value: string) => {
         console.log(`socket.id: ${socket.id}, value: ${value}`);
 
         io.emit('receive_dropdown_selected_value', value);
     });
 
+    // Handle checkbox is checked event
     socket.on("checkbox_is_checked", (checked: boolean) => {
         console.log(`socket.id: ${socket.id}, value: ${checked}`);
 
         io.emit('receive_dropdown_checkbox_is_checked', checked);
     });
 
+    // Handle disconnect event
     socket.on('disconnect', () => {
         console.log('A user disconnected:', socket.id)
     })
