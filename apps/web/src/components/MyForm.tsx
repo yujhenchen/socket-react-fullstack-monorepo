@@ -26,6 +26,7 @@ export function MyForm() {
         // }
       );
       setIsLoading(false);
+      setValue("");
     } catch (error) {
       setIsLoading(false);
       if (error instanceof Error) setErrors(error);
@@ -37,7 +38,11 @@ export function MyForm() {
 
   return (
     <form className="flex max-w-md gap-4" onSubmit={onSubmit}>
-      <TextInput type="text" onChange={(e) => setValue(e.target.value)} />
+      <TextInput
+        type="text"
+        onChange={(e) => setValue(e.target.value)}
+        value={value}
+      />
       <Button type="submit" disabled={isLoading}>
         Submit
       </Button>
