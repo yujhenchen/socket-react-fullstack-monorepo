@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { socket } from "./socket";
 import { ConnectionState } from "./components/ConnectionState";
 import { ConnectionManager } from "./components/ConnectionManager";
-import { Events } from "./components/Events";
 import { MyForm } from "./components/MyForm";
 import { AppCard } from "./components/AppCard";
+import { Messages } from "./components/Messages";
 
 function App() {
   const [isConnected, setIsConnected] = useState<boolean>(socket.connected); // the state is wrong, it shows false while staying in connection
@@ -53,11 +53,14 @@ function App() {
   }, [socket]); // TODO: should monitor what for receive_msg event
 
   return (
-    <main className="container min-h-screen mx-auto">
-      <ConnectionState isConnected={isConnected} />
-      <Events events={messages} />
-      <ConnectionManager />
+    <main className="container min-h-screen mx-auto grid gap-4">
       <AppCard>
+        <ConnectionState isConnected={isConnected} />
+        <ConnectionManager />
+      </AppCard>
+
+      <AppCard>
+        <Messages events={messages} />
         <MyForm />
       </AppCard>
     </main>
