@@ -6,7 +6,7 @@ export function AppCheckbox() {
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
   useEffect(() => {
-    socket.on("receive_dropdown_checkbox_is_checked", (checked: boolean) =>
+    socket.on("receive_checkbox_is_checked", (checked: boolean) =>
       setIsChecked(checked)
     );
   }, [socket]);

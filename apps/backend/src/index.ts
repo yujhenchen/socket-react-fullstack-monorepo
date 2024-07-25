@@ -1,8 +1,9 @@
 import express from "express";
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import http from 'http';
 import { env } from "./config/env";
 import cors from 'cors';
+import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
 const app = express();
 const port = env.port;
@@ -24,38 +25,51 @@ app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
+// deal with socket related features
+type SocketType = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, Record<string, never>>;
+
+const handleSendMessage = (socket: SocketType) => (message: string) => {
+    try {
+        console.log(`socket.id: ${socket.id}, message: ${message}`);
+        io.emit('receive_msg', message);
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+const handleDropdownSelectedValue = (socket: SocketType) => (value: string) => {
+    try {
+        console.log(`socket.id: ${socket.id}, value: ${value}`);
+        io.emit('receive_dropdown_selected_value', value);
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+const handleCheckboxIsChecked = (socket: SocketType) => (checked: boolean) => {
+    try {
+        console.log(`socket.id: ${socket.id}, value: ${checked}`);
+        io.emit('receive_checkbox_is_checked', checked);
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+const handleDisconnect = (socket: SocketType) => () => {
+    console.log('A user disconnected:', socket.id)
+}
+
 // listen on the connection event for incoming sockets
-io.on('connection', (socket) => {
+io.on('connection', (socket: SocketType) => {
     console.log('a user connected', socket.id);
 
-    // Handle message sending and receiving event
-    socket.on("send_msg", (msg: string) => {
-        console.log(`socket.id: ${socket.id}, msg: ${msg}`);
-        // TODO: study the difference between `socket.broadcast.emit` and `io.emit`
-        io.emit('receive_msg', msg);    // Broadcast the message to all connected clients (including the sender)
-        // socket.broadcast.emit('receive_msg', msg);    // Broadcast the message to all connected clients (except the sender)
-    });
-
-    // Handle dropdown selected value event
-    socket.on("dropdown_selected_value", (value: string) => {
-        console.log(`socket.id: ${socket.id}, value: ${value}`);
-
-        io.emit('receive_dropdown_selected_value', value);
-    });
-
-    // Handle checkbox is checked event
-    socket.on("checkbox_is_checked", (checked: boolean) => {
-        console.log(`socket.id: ${socket.id}, value: ${checked}`);
-
-        io.emit('receive_dropdown_checkbox_is_checked', checked);
-    });
-
-    // Handle disconnect event
-    socket.on('disconnect', () => {
-        console.log('A user disconnected:', socket.id)
-    })
+    socket.on("send_msg", handleSendMessage(socket));
+    socket.on("dropdown_selected_value", handleDropdownSelectedValue(socket));
+    socket.on("checkbox_is_checked", handleCheckboxIsChecked(socket));
+    socket.on("disconnect", handleDisconnect(socket));
 });
 
+// expose port
 server.listen(port, () => {
     console.log(`Listening on port ${port}...`);
 });
