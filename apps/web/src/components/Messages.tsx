@@ -2,7 +2,7 @@ interface EventsProps {
   events: string[];
 }
 
-export function Events({ events }: EventsProps) {
+export function Messages({ events }: EventsProps) {
   return (
     <ul>
       {events.map((event, index) => (
