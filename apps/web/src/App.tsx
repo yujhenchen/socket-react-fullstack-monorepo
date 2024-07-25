@@ -10,6 +10,7 @@ import { Messages } from "./components/Messages";
 import { AppSelect } from "./components/AppSelect";
 import { AppCheckbox } from "./components/AppCheckbox";
 import AppRadios from "./components/AppRadios";
+import { AppTextarea } from "./components/AppTextarea";
 
 function App() {
   const [isConnected, setIsConnected] = useState<boolean>(socket.connected); // the state is wrong, it shows false while staying in connection
@@ -89,6 +90,10 @@ function App() {
 
       <AppCard>
         <AppRadios options={trends} />
+      </AppCard>
+
+      <AppCard>
+        <AppTextarea />
       </AppCard>
     </main>
   );
