@@ -55,6 +55,15 @@ const handleCheckboxIsChecked = (socket: SocketType) => (checked: boolean) => {
     }
 }
 
+const handleRadioIsChecked = (socket: SocketType) => (value: string) => {
+    try {
+        console.log(`socket.id: ${socket.id}, value: ${value}`);
+        io.emit('receive_radio_selected_value', value);
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 const handleDisconnect = (socket: SocketType) => () => {
     console.log('A user disconnected:', socket.id)
 }
@@ -66,6 +75,8 @@ io.on('connection', (socket: SocketType) => {
     socket.on("send_msg", handleSendMessage(socket));
     socket.on("dropdown_selected_value", handleDropdownSelectedValue(socket));
     socket.on("checkbox_is_checked", handleCheckboxIsChecked(socket));
+    socket.on("radio_selected_value", handleRadioIsChecked(socket));
+
     socket.on("disconnect", handleDisconnect(socket));
 });
 
