@@ -8,7 +8,7 @@ export function Messages({ messages }: EventsProps) {
   return (
     <List
       unstyled
-      className="max-w-md divide-y divide-gray-200 dark:divide-gray-700"
+      className="max-w-md divide-y divide-gray-200 dark:divide-gray-700 max-h-56 overflow-y-scroll"
     >
       {messages.map((message, index) => (
         <List.Item

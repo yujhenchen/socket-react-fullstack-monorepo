@@ -9,6 +9,7 @@ import { AppCard } from "./components/AppCard";
 import { Messages } from "./components/Messages";
 import { AppSelect } from "./components/AppSelect";
 import { AppCheckbox } from "./components/AppCheckbox";
+import AppRadios from "./components/AppRadios";
 
 function App() {
   const [isConnected, setIsConnected] = useState<boolean>(socket.connected); // the state is wrong, it shows false while staying in connection
@@ -67,7 +68,7 @@ function App() {
   }, [socket]); // TODO: should monitor what for receive_msg event
 
   return (
-    <main className="container min-h-screen mx-auto grid gap-4 px-16 py-8">
+    <main className="container min-h-screen mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-8">
       <AppCard>
         <ConnectionState isConnected={isConnected} />
         <ConnectionManager />
@@ -84,6 +85,10 @@ function App() {
 
       <AppCard>
         <AppCheckbox />
+      </AppCard>
+
+      <AppCard>
+        <AppRadios options={trends} />
       </AppCard>
     </main>
   );

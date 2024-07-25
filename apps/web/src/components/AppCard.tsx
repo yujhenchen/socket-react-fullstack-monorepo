@@ -7,7 +7,7 @@ interface Props {
 
 export function AppCard({ children }: Props) {
   return (
-    <Card href="#" className="max-w-sm">
+    <Card href="#" className="min-w-fit m-h-fit max-w-md max-h-sm">
       {children}
     </Card>
   );
