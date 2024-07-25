@@ -60,7 +60,7 @@ function App() {
       </AppCard>
 
       <AppCard>
-        <Messages events={messages} />
+        <Messages messages={messages} />
         <MyForm />
       </AppCard>
     </main>
