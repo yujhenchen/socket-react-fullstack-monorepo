@@ -3,5 +3,12 @@ interface ConnectionStateProps {
 }
 
 export function ConnectionState({ isConnected }: ConnectionStateProps) {
-  return <p>State: {isConnected.toString()}</p>;
+  return (
+    <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+      Is Connected:{" "}
+      <span className="font-normal text-gray-700 dark:text-gray-400 whitespace-pre">
+        {isConnected.toString()}
+      </span>
+    </h5>
+  );
 }

@@ -1,3 +1,4 @@
+import { Button } from "flowbite-react";
 import { socket } from "../socket";
 
 export function ConnectionManager() {
@@ -10,9 +11,9 @@ export function ConnectionManager() {
   }
 
   return (
-    <>
-      <button onClick={connect}>Connect</button>
-      <button onClick={disconnect}>Disconnect</button>
-    </>
+    <div className="flex gap-4">
+      <Button onClick={connect}>Connect</Button>
+      <Button onClick={disconnect}>Disconnect</Button>
+    </div>
   );
 }
