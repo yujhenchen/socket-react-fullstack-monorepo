@@ -8,6 +8,7 @@ import { MyForm } from "./components/MyForm";
 import { AppCard } from "./components/AppCard";
 import { Messages } from "./components/Messages";
 import { AppSelect } from "./components/AppSelect";
+import { AppCheckbox } from "./components/AppCheckbox";
 
 function App() {
   const [isConnected, setIsConnected] = useState<boolean>(socket.connected); // the state is wrong, it shows false while staying in connection
@@ -79,6 +80,10 @@ function App() {
 
       <AppCard>
         <AppSelect items={options} />
+      </AppCard>
+
+      <AppCard>
+        <AppCheckbox />
       </AppCard>
     </main>
   );

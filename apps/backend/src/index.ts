@@ -48,6 +48,12 @@ io.on('connection', (socket) => {
         io.emit('receive_dropdown_selected_value', value);
     });
 
+    socket.on("checkbox_is_checked", (checked: boolean) => {
+        console.log(`socket.id: ${socket.id}, value: ${checked}`);
+
+        io.emit('receive_dropdown_checkbox_is_checked', checked);
+    });
+
     socket.on('disconnect', () => {
         console.log('A user disconnected:', socket.id)
     })
