@@ -7,7 +7,7 @@ import { ConnectionManager } from "./components/ConnectionManager";
 import { MyForm } from "./components/MyForm";
 import { AppCard } from "./components/AppCard";
 import { Messages } from "./components/Messages";
-import { AppDropdown } from "./components/AppDropdown";
+import { AppSelect } from "./components/AppSelect";
 
 function App() {
   const [isConnected, setIsConnected] = useState<boolean>(socket.connected); // the state is wrong, it shows false while staying in connection
@@ -66,7 +66,7 @@ function App() {
   }, [socket]); // TODO: should monitor what for receive_msg event
 
   return (
-    <main className="container min-h-screen mx-auto grid gap-4">
+    <main className="container min-h-screen mx-auto grid gap-4 px-16 py-8">
       <AppCard>
         <ConnectionState isConnected={isConnected} />
         <ConnectionManager />
@@ -78,7 +78,7 @@ function App() {
       </AppCard>
 
       <AppCard>
-        <AppDropdown items={options} />
+        <AppSelect items={options} />
       </AppCard>
     </main>
   );

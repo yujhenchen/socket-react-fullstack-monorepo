@@ -1,11 +1,12 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { socket } from "../socket";
+import { Select } from "flowbite-react";
 
 interface Props {
   items: string[];
 }
 
-export function AppDropdown({ items }: Props) {
+export function AppSelect({ items }: Props) {
   const [selectedValue, setSelectedValue] = useState<string>("");
 
   useEffect(() => {
@@ -24,10 +25,10 @@ export function AppDropdown({ items }: Props) {
   }
 
   return (
-    <select value={selectedValue} onChange={handleOnChange}>
+    <Select value={selectedValue} onChange={handleOnChange}>
       {items.map((item, index) => (
         <option key={index}>{item}</option>
       ))}
-    </select>
+    </Select>
   );
 }
