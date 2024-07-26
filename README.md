@@ -1,6 +1,9 @@
 # About this project
 Full stack web application built with a monorepo using Turbo, featuring a Socket.io and Express.js backend, and a Vite, React, Tailwind CSS, and Flowbite-React frontend.
 
+## Issues Encountered and Solutions
+Add something
+
 ## A Beginner's Guide to WebSockets
 - https://www.youtube.com/watch?v=8ARodQ4Wlf4
 	- use Chrome dev to debug, WS -> Frames
