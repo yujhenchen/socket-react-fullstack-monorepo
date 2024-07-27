@@ -9,6 +9,7 @@ import { AppSelect } from "./components/AppSelect";
 import { AppCheckbox } from "./components/AppCheckbox";
 import AppRadios from "./components/AppRadios";
 import { AppTextarea } from "./components/AppTextarea";
+import Counter from "./components/Counter";
 
 function App() {
   const [isConnected, setIsConnected] = useState<boolean>(socket.connected); // the state is wrong, it shows false while staying in connection
@@ -51,6 +52,25 @@ function App() {
   }, []);
 
   useEffect(() => {
+    socket.on("connect_error", (err) => {
+      console.log(err);
+
+      // the reason of the error, for example "xhr poll error"
+      console.log(err.message);
+
+      // some additional description, for example the status code of the initial HTTP response
+      console.log(err.description);
+
+      // some additional context, for example the XMLHttpRequest object
+      console.log(err.context);
+    });
+
+    return () => {
+      socket.off("connect_error");
+    };
+  }, []);
+
+  useEffect(() => {
     setIsConnected(socket.connected);
   }, [socket.connected]);
 
@@ -71,6 +91,10 @@ function App() {
       <AppCard>
         <ConnectionState isConnected={isConnected} />
         <ConnectionManager />
+      </AppCard>
+
+      <AppCard>
+        <Counter />
       </AppCard>
 
       <AppCard>
