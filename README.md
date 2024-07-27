@@ -64,7 +64,20 @@ io.on('connection', (socket: SocketType) => {
 ???
 
 ### Solution
-???
+- https://socket.io/docs/v4/server-api/#engineclientscount
+
+Use `io.of("/").sockets.size` instead of `io.engine.clientsCount`.
+```
+const handleDisconnect = (socket: SocketType) => () => {
+    ... 
+    
+    io.emit("receive_online_people_count", io.of("/").sockets.size);
+    
+    ...
+}
+
+```
+
 
 
 ## A Beginner's Guide to WebSockets
