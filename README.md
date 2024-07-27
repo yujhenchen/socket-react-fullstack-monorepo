@@ -1,8 +1,41 @@
-# About this project
+## About The Project
+
 Full stack web application built with a monorepo using Turbo, featuring a Socket.io and Express.js backend, and a Vite, React, Tailwind CSS, and Flowbite-React frontend.
 
 ## Issues Encountered and Solutions
 Add something
+
+
+## Troubleshooting connection issues
+- https://socket.io/docs/v4/troubleshooting-connection-issues/
+
+### Error `Property 'description' does not exist on type 'Error'.ts` and `Property 'context' does not exist on type 'Error'.ts`
+When monitor `connect_error` event at client side
+```
+ useEffect(() => {
+    socket.on("connect_error", (err) => {
+      // the reason of the error, for example "xhr poll error"
+      console.log(err.message);
+
+      // some additional description, for example the status code of the initial HTTP response
+      console.log(err.description);
+
+      // some additional context, for example the XMLHttpRequest object
+      console.log(err.context);
+    });
+
+    return () => {
+      socket.off("connect_error");
+    };
+  }, []);
+```
+
+#### Root cause
+???
+
+#### Solution
+???
+
 
 ## A Beginner's Guide to WebSockets
 - https://www.youtube.com/watch?v=8ARodQ4Wlf4
