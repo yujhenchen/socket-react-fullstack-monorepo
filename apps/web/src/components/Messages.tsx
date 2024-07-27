@@ -1,10 +1,22 @@
 import { Avatar, List } from "flowbite-react";
+import { useEffect, useState } from "react";
+import { socket } from "../socket";
 
-interface EventsProps {
-  messages: string[];
-}
+export function Messages() {
+  const [messages, setMessages] = useState<string[]>([]);
 
-export function Messages({ messages }: EventsProps) {
+  useEffect(() => {
+    function onMessageEvent(value: string) {
+      setMessages((previous) => [...previous, value]);
+    }
+
+    socket.on("receive_msg", onMessageEvent);
+
+    return () => {
+      socket.off("receive_msg", onMessageEvent);
+    };
+  }, [socket]);
+
   return (
     <List
       unstyled

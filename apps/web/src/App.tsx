@@ -12,7 +12,7 @@ import { AppTextarea } from "./components/AppTextarea";
 import Counter from "./components/Counter";
 
 function App() {
-  const [messages, setMessages] = useState<string[]>([]);
+  // const [messages, setMessages] = useState<string[]>([]);
   const trends = useMemo(
     () => [
       "Micro Frontends",
@@ -45,17 +45,17 @@ function App() {
     };
   }, []);
 
-  useEffect(() => {
-    function onMessageEvent(value: string) {
-      setMessages((previous) => [...previous, value]);
-    }
+  // useEffect(() => {
+  //   function onMessageEvent(value: string) {
+  //     setMessages((previous) => [...previous, value]);
+  //   }
 
-    socket.on("receive_msg", onMessageEvent);
+  //   socket.on("receive_msg", onMessageEvent);
 
-    return () => {
-      socket.off("receive_msg", onMessageEvent);
-    };
-  }, [socket]);
+  //   return () => {
+  //     socket.off("receive_msg", onMessageEvent);
+  //   };
+  // }, [socket]);
 
   const contentList = useMemo(
     () => [
@@ -65,7 +65,7 @@ function App() {
       </>,
       <Counter />,
       <>
-        <Messages messages={messages} />
+        <Messages />
         <MyForm />
       </>,
       <AppSelect items={options} />,
