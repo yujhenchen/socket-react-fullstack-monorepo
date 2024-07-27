@@ -74,20 +74,19 @@ const handleTextareaValue = (socket: SocketType) => (value: string) => {
 }
 
 const handleDisconnect = (socket: SocketType) => () => {
-    console.log('A user disconnected:', socket.id);
+    console.log('A user disconnected:', socket.id, 'io.of("/").sockets.size:', io.of("/").sockets.size);
     try {
-        io.emit("receive_online_people_count", io.engine.clientsCount); // when a user disconnect, this won't be send to all other users    
+        io.emit("receive_online_people_count", io.of("/").sockets.size);
     } catch (error) {
         console.error(error)
     }
-
 }
 
 // listen on the connection event for incoming sockets
 io.on('connection', (socket: SocketType) => {
     console.log('a user connected', socket.id);
 
-    io.emit("receive_online_people_count", io.engine.clientsCount);
+    io.emit("receive_online_people_count", io.of("/").sockets.size);
 
     socket.on("send_msg", handleSendMessage(socket));
     socket.on("dropdown_selected_value", handleDropdownSelectedValue(socket));
