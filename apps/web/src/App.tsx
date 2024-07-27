@@ -12,7 +12,6 @@ import { AppTextarea } from "./components/AppTextarea";
 import Counter from "./components/Counter";
 
 function App() {
-  const [isConnected, setIsConnected] = useState<boolean>(socket.connected); // the state is wrong, it shows false while staying in connection
   const [messages, setMessages] = useState<string[]>([]);
   const trends = useMemo(
     () => [
@@ -26,30 +25,6 @@ function App() {
     []
   );
   const [options] = useState<string[]>(trends);
-
-  useEffect(() => {
-    function onConnect() {
-      setIsConnected(true);
-    }
-
-    socket.on("connect", onConnect);
-
-    return () => {
-      socket.off("connect", onConnect);
-    };
-  }, []);
-
-  useEffect(() => {
-    function onDisconnect() {
-      setIsConnected(false);
-    }
-
-    socket.on("disconnect", onDisconnect);
-
-    return () => {
-      socket.off("disconnect", onDisconnect);
-    };
-  }, []);
 
   useEffect(() => {
     socket.on("connect_error", (err) => {
@@ -71,10 +46,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    setIsConnected(socket.connected);
-  }, [socket.connected]);
-
-  useEffect(() => {
     function onMessageEvent(value: string) {
       setMessages((previous) => [...previous, value]);
     }
@@ -86,9 +57,28 @@ function App() {
     };
   }, [socket]);
 
+  const contentList = useMemo(
+    () => [
+      <>
+        <ConnectionState />
+        <ConnectionManager />
+      </>,
+      <Counter />,
+      <>
+        <Messages messages={messages} />
+        <MyForm />
+      </>,
+      <AppSelect items={options} />,
+      <AppCheckbox />,
+      <AppRadios options={trends} />,
+      <AppTextarea />,
+    ],
+    []
+  );
+
   return (
     <main className="container min-h-screen mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-8">
-      <AppCard>
+      {/* <AppCard>
         <ConnectionState isConnected={isConnected} />
         <ConnectionManager />
       </AppCard>
@@ -116,7 +106,10 @@ function App() {
 
       <AppCard>
         <AppTextarea />
-      </AppCard>
+      </AppCard> */}
+      {contentList.map((content, index) => (
+        <AppCard key={index}>{content}</AppCard>
+      ))}
     </main>
   );
 }
