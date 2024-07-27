@@ -37,6 +37,36 @@ When monitor `connect_error` event at client side
 ???
 
 
+
+## How to handle disconnect event and broadcast to all clients (including the one that is going to disconnect)
+When monitoring and handling the `disconnect` event as below in the function `handleDisconnect`, `io.emit("receive_online_people_count", count);` fails on emit event to all clients. Because the current user has disconnected.
+```
+const handleDisconnect = (socket: SocketType) => () => {
+    console.log('A user disconnected:', socket.id);
+    const count = io.engine.clientsCount;
+    io.emit("receive_online_people_count", count); // when a user disconnect, this won't be send to all users
+}
+
+// listen on the connection event for incoming sockets
+io.on('connection', (socket: SocketType) => {
+    console.log('a user connected', socket.id);
+
+    const count = io.engine.clientsCount;
+    io.emit("receive_online_people_count", count);
+
+    ...
+
+    socket.on("disconnect", handleDisconnect(socket));
+});
+```
+
+### Root cause
+???
+
+### Solution
+???
+
+
 ## A Beginner's Guide to WebSockets
 - https://www.youtube.com/watch?v=8ARodQ4Wlf4
 	- use Chrome dev to debug, WS -> Frames
