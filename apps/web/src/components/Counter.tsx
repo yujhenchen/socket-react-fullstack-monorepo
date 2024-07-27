@@ -10,10 +10,12 @@ export default function Counter() {
     );
   }, [socket]);
   return (
-    <div>
-      <span>There are currently</span>
-      <span>{count}</span>
+    <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex flex-col">
+      <span>There are currently:</span>
+      <span className="font-normal text-gray-700 dark:text-gray-400 whitespace-pre">
+        {count}
+      </span>
       <span>people online</span>
-    </div>
+    </h5>
   );
 }
