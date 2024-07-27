@@ -74,12 +74,17 @@ const handleTextareaValue = (socket: SocketType) => (value: string) => {
 }
 
 const handleDisconnect = (socket: SocketType) => () => {
-    console.log('A user disconnected:', socket.id)
+    console.log('A user disconnected:', socket.id);
+    const count = io.engine.clientsCount;
+    io.emit("receive_online_people_count", count); // when a user disconnect, this won't be send to all other users
 }
 
 // listen on the connection event for incoming sockets
 io.on('connection', (socket: SocketType) => {
     console.log('a user connected', socket.id);
+
+    const count = io.engine.clientsCount;
+    io.emit("receive_online_people_count", count);
 
     socket.on("send_msg", handleSendMessage(socket));
     socket.on("dropdown_selected_value", handleDropdownSelectedValue(socket));
@@ -88,6 +93,13 @@ io.on('connection', (socket: SocketType) => {
     socket.on("textarea_value", handleTextareaValue(socket));
 
     socket.on("disconnect", handleDisconnect(socket));
+});
+
+io.engine.on("connection_error", (err) => {
+    console.log(err.req);      // the request object
+    console.log(err.code);     // the error code, for example 1
+    console.log(err.message);  // the error message, for example "Session ID unknown"
+    console.log(err.context);  // some additional error context
 });
 
 // expose port
