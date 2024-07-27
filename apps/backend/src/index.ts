@@ -29,8 +29,8 @@ app.get("/", (req, res) => {
 type SocketType = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, Record<string, never>>;
 
 const handleSendMessage = (socket: SocketType) => (message: string) => {
+    console.log(`socket.id: ${socket.id}, message: ${message}`);
     try {
-        console.log(`socket.id: ${socket.id}, message: ${message}`);
         io.emit('receive_msg', message);
     } catch (error) {
         console.error(error)
@@ -38,8 +38,8 @@ const handleSendMessage = (socket: SocketType) => (message: string) => {
 }
 
 const handleDropdownSelectedValue = (socket: SocketType) => (value: string) => {
+    console.log(`socket.id: ${socket.id}, value: ${value}`);
     try {
-        console.log(`socket.id: ${socket.id}, value: ${value}`);
         io.emit('receive_dropdown_selected_value', value);
     } catch (error) {
         console.error(error)
@@ -47,8 +47,8 @@ const handleDropdownSelectedValue = (socket: SocketType) => (value: string) => {
 }
 
 const handleCheckboxIsChecked = (socket: SocketType) => (checked: boolean) => {
+    console.log(`socket.id: ${socket.id}, value: ${checked}`);
     try {
-        console.log(`socket.id: ${socket.id}, value: ${checked}`);
         io.emit('receive_checkbox_is_checked', checked);
     } catch (error) {
         console.error(error)
@@ -56,8 +56,8 @@ const handleCheckboxIsChecked = (socket: SocketType) => (checked: boolean) => {
 }
 
 const handleRadioIsChecked = (socket: SocketType) => (value: string) => {
+    console.log(`socket.id: ${socket.id}, value: ${value}`);
     try {
-        console.log(`socket.id: ${socket.id}, value: ${value}`);
         io.emit('receive_radio_selected_value', value);
     } catch (error) {
         console.error(error)
@@ -65,8 +65,8 @@ const handleRadioIsChecked = (socket: SocketType) => (value: string) => {
 }
 
 const handleTextareaValue = (socket: SocketType) => (value: string) => {
+    console.log(`socket.id: ${socket.id}, value: ${value}`);
     try {
-        console.log(`socket.id: ${socket.id}, value: ${value}`);
         io.emit('receive_textarea_value', value);
     } catch (error) {
         console.error(error)
@@ -75,16 +75,19 @@ const handleTextareaValue = (socket: SocketType) => (value: string) => {
 
 const handleDisconnect = (socket: SocketType) => () => {
     console.log('A user disconnected:', socket.id);
-    const count = io.engine.clientsCount;
-    io.emit("receive_online_people_count", count); // when a user disconnect, this won't be send to all other users
+    try {
+        io.emit("receive_online_people_count", io.engine.clientsCount); // when a user disconnect, this won't be send to all other users    
+    } catch (error) {
+        console.error(error)
+    }
+
 }
 
 // listen on the connection event for incoming sockets
 io.on('connection', (socket: SocketType) => {
     console.log('a user connected', socket.id);
 
-    const count = io.engine.clientsCount;
-    io.emit("receive_online_people_count", count);
+    io.emit("receive_online_people_count", io.engine.clientsCount);
 
     socket.on("send_msg", handleSendMessage(socket));
     socket.on("dropdown_selected_value", handleDropdownSelectedValue(socket));
