@@ -29,9 +29,10 @@ export default function AppRadios({ options }: Props) {
   return (
     <fieldset className="font-normal text-gray-700 dark:text-gray-400 whitespace-pre">
       <legend className="mb-4">Choose your favorite one</legend>
-      {options.map((option) => (
+      {options.map((option, index) => (
         <div className="flex items-center gap-2">
           <Radio
+            key={index}
             id="united-state"
             name="countries"
             value={option}
