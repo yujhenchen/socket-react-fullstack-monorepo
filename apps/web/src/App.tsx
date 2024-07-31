@@ -10,6 +10,7 @@ import { AppCheckbox } from "./components/AppCheckbox";
 import AppRadios from "./components/AppRadios";
 import { AppTextarea } from "./components/AppTextarea";
 import Counter from "./components/Counter";
+import { AppMap } from "./components/AppMap";
 
 function App() {
   const trends = useMemo(
@@ -61,6 +62,7 @@ function App() {
       <AppCheckbox />,
       <AppRadios options={trends} />,
       <AppTextarea />,
+      <AppMap />,
     ],
     []
   );
