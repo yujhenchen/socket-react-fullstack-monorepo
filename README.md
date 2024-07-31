@@ -1,6 +1,6 @@
 ## About The Project
 
-Full stack web application built with a monorepo using Turbo, featuring a Socket.io and Express.js backend, and a Vite, React, Tailwind CSS, and Flowbite-React frontend.
+A real-time multi-user full-stack web application built with monorepo using Turbo. The backend utilizes Socket.io and Express.js, while the frontend is crafted with Vite, React, Tailwind CSS, and Flowbite-React. Features include common web elements like dropdown lists, textareas, and radio buttons, along with Google Maps API integration
 
 ## Issues Encountered and Solutions
 Add something
