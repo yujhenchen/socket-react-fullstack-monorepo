@@ -10,7 +10,7 @@ export default function Counter() {
     );
   }, [socket]);
   return (
-    <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex flex-col">
+    <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white flex gap-4">
       <span>There are currently:</span>
       <span className="font-normal text-gray-700 dark:text-gray-400 whitespace-pre">
         {count}

@@ -11,7 +11,7 @@ export function ConnectionManager() {
   }
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-4 h-fit">
       <Button onClick={connect}>Connect</Button>
       <Button onClick={disconnect}>Disconnect</Button>
     </div>
