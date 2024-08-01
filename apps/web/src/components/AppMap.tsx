@@ -30,7 +30,14 @@ export function AppMap() {
 
   return (
     <APIProvider apiKey={import.meta.env.VITE_MAP_API_KEY}>
-      <Map defaultCenter={position} defaultZoom={10} onClick={handleOnClick}>
+      <Map
+        defaultCenter={position}
+        defaultZoom={10}
+        onClick={handleOnClick}
+        className="w-full h-full"
+        gestureHandling={"greedy"}
+        disableDefaultUI={false}
+      >
         <Marker position={position} />
       </Map>
     </APIProvider>

@@ -57,13 +57,13 @@ function App() {
       <AppCheckbox />,
       <AppRadios options={trends} />,
       <AppTextarea />,
-      <AppMap />,
+      <>A random thing</>,
     ],
     []
   );
 
   return (
-    <main className="container min-h-screen mx-auto py-8">
+    <main className="container min-h-screen mx-auto py-8 flex flex-col gap-8">
       <div className="flex place-content-between p-4">
         <ConnectionState />
         <ConnectionManager />
@@ -75,6 +75,10 @@ function App() {
           <AppCard key={index}>{content}</AppCard>
         ))}
       </div>
+
+      <AppCard styleClassName="w-full h-[50vh]">
+        <AppMap />
+      </AppCard>
     </main>
   );
 }
