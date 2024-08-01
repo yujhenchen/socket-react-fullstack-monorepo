@@ -50,11 +50,6 @@ function App() {
   const contentList = useMemo(
     () => [
       <>
-        <ConnectionState />
-        <ConnectionManager />
-      </>,
-      <Counter />,
-      <>
         <Messages />
         <MyForm />
       </>,
@@ -68,10 +63,18 @@ function App() {
   );
 
   return (
-    <main className="container min-h-screen mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-8">
-      {contentList.map((content, index) => (
-        <AppCard key={index}>{content}</AppCard>
-      ))}
+    <main className="container min-h-screen mx-auto py-8">
+      <div className="flex place-content-between p-4">
+        <ConnectionState />
+        <ConnectionManager />
+        <Counter />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {contentList.map((content, index) => (
+          <AppCard key={index}>{content}</AppCard>
+        ))}
+      </div>
     </main>
   );
 }
