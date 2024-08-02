@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { socket } from "./socket";
 import { ConnectionState } from "./components/ConnectionState";
 import { ConnectionManager } from "./components/ConnectionManager";
@@ -12,20 +12,16 @@ import { AppTextarea } from "./components/AppTextarea";
 import Counter from "./components/Counter";
 import { AppMap } from "./components/AppMap";
 
-function App() {
-  const trends = useMemo(
-    () => [
-      "Micro Frontends",
-      "WebAssembly (Wasm)",
-      "Component-Driven Development (CDD)",
-      "AI and Machine Learning Integration",
-      "AI and Machine Learning Integration",
-      "Server-Side Rendering (SSR) and Static Site Generation (SSG)",
-    ],
-    []
-  );
-  const [options] = useState<string[]>(trends);
+const trends = [
+  "Micro Frontends",
+  "WebAssembly (Wasm)",
+  "Component-Driven Development (CDD)",
+  "AI and Machine Learning Integration",
+  "AI and Machine Learning Integration",
+  "Server-Side Rendering (SSR) and Static Site Generation (SSG)",
+];
 
+function App() {
   useEffect(() => {
     socket.on("connect_error", (err) => {
       console.log(err);
@@ -53,13 +49,13 @@ function App() {
         <Messages />
         <MyForm />
       </>,
-      <AppSelect items={options} />,
+      <AppSelect items={trends} />,
       <AppCheckbox />,
       <AppRadios options={trends} />,
       <AppTextarea />,
       <>A random thing</>,
     ],
-    []
+    [trends]
   );
 
   return (
