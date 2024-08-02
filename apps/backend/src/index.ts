@@ -73,6 +73,18 @@ const handleTextareaValue = (socket: SocketType) => (value: string) => {
     }
 }
 
+const handleMapPosition = (socket: SocketType) => (position: {
+    lat: number;
+    lng: number;
+}) => {
+    console.log(`socket.id: ${socket.id}, position:`, position);
+    try {
+        io.emit('receive_map_position', position);
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 const handleDisconnect = (socket: SocketType) => () => {
     console.log('A user disconnected:', socket.id, 'io.of("/").sockets.size:', io.of("/").sockets.size);
     try {
@@ -93,6 +105,7 @@ io.on('connection', (socket: SocketType) => {
     socket.on("checkbox_is_checked", handleCheckboxIsChecked(socket));
     socket.on("radio_selected_value", handleRadioIsChecked(socket));
     socket.on("textarea_value", handleTextareaValue(socket));
+    socket.on("map_position", handleMapPosition(socket));
 
     socket.on("disconnect", handleDisconnect(socket));
 });
