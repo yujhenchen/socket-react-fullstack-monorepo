@@ -1,43 +1,37 @@
 import { Rating } from "flowbite-react";
 import { useState } from "react";
 
-const defaultFilledState = {
-  first: false,
-  second: false,
-  third: false,
-  forth: false,
-  fifth: false,
-};
+const defaultFilledState = [false, false, false, false, false];
+
+const starCount = 5;
 
 export default function AppRating() {
   const [filledState, setFillState] = useState(defaultFilledState);
+
+  const handleMouseOver = (event) => {
+    setFillState((state) => {
+      const newState = [...state];
+      newState[event.target.id] = true;
+      return newState;
+    });
+  };
+
+  const handleMouseOut = (event) => {};
+
+  //   const handleClick = (event) => {};
+
   return (
     <Rating size="lg">
-      <Rating.Star filled={filledState.first} />
-      <Rating.Star filled={filledState.second} />
-      <Rating.Star filled={filledState.third} />
-      <Rating.Star filled={filledState.forth} />
-      <Rating.Star
-        onMouseEnter={() =>
-          setFillState({
-            first: true,
-            second: true,
-            third: true,
-            forth: true,
-            fifth: true,
-          })
-        }
-        onMouseLeave={() =>
-          setFillState({
-            first: true,
-            second: true,
-            third: true,
-            forth: true,
-            fifth: false,
-          })
-        }
-        filled={filledState.fifth}
-      />
+      {Array.from({ length: starCount }).map((value, index) => (
+        <Rating.Star
+          key={index}
+          id={index.toString()}
+          onMouseOver={handleMouseOver}
+          onMouseOut={handleMouseOut}
+          //   onClick={handleClick}
+          filled={filledState[index]}
+        />
+      ))}
     </Rating>
   );
 }
