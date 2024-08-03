@@ -11,6 +11,7 @@ import AppRadios from "./components/AppRadios";
 import { AppTextarea } from "./components/AppTextarea";
 import Counter from "./components/Counter";
 import { AppMap } from "./components/AppMap";
+import AppRating from "./components/AppRating";
 
 const trends = [
   "Micro Frontends",
@@ -53,7 +54,7 @@ function App() {
       <AppCheckbox />,
       <AppRadios options={trends} />,
       <AppTextarea />,
-      <>A random thing</>,
+      <AppRating />,
     ],
     [trends]
   );
