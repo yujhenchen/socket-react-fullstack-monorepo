@@ -8,15 +8,21 @@ const starCount = 5;
 export default function AppRating() {
   const [filledState, setFillState] = useState(defaultFilledState);
 
-  const handleMouseOver = (event) => {
-    setFillState((state) => {
-      const newState = [...state];
-      newState[event.target.id] = true;
-      return newState;
-    });
-  };
+  //   const handleMouseOver = (event) => {
+  //     setFillState((state) => {
+  //       const newState = [...state];
+  //       newState[event.target.id] = true;
+  //       return newState;
+  //     });
+  //   };
 
-  const handleMouseOut = (event) => {};
+  /**
+   * TODO:
+   * false -> click any -> before the index all set to true (includes current)
+   * true -> click any -> after the index all set to true (includes current)
+   */
+
+  //   const handleMouseOut = (event) => {};
 
   //   const handleClick = (event) => {};
 
@@ -26,8 +32,8 @@ export default function AppRating() {
         <Rating.Star
           key={index}
           id={index.toString()}
-          onMouseOver={handleMouseOver}
-          onMouseOut={handleMouseOut}
+          //   onMouseOver={handleMouseOver}
+          //   onMouseOut={handleMouseOut}
           //   onClick={handleClick}
           filled={filledState[index]}
         />
