@@ -28,6 +28,8 @@ app.get("/", (req, res) => {
 // deal with socket related features
 type SocketType = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, Record<string, never>>;
 
+const customRooms = ["Room A", "Room B", "Room C"];
+
 const handleDisconnect = (socket: SocketType) => () => {
     console.log('A user disconnected:', socket.id, 'io.of("/").sockets.size:', io.of("/").sockets.size);
     try {
@@ -37,13 +39,10 @@ const handleDisconnect = (socket: SocketType) => () => {
     }
 }
 
-const handleEmit = <T extends Record<string, unknown> | string | number | boolean>(eventName: string) => (value: T) => {
+const handleEmit = <T extends Record<string, unknown> | string | number | boolean>(socket: SocketType, eventName: string) => (value: T) => {
     try {
-        /**
-         * broadcast to everyone includes its own when there is no selected room,
-         * otherwise send to the sockets in the room
-         */
-        io.emit(eventName, value);
+        if (socket.rooms.size > 1) socket.rooms.forEach(room => socket.to(room).emit(eventName, value));
+        else io.emit(eventName, value);
     } catch (error) {
         console.error(error)
     }
@@ -51,22 +50,16 @@ const handleEmit = <T extends Record<string, unknown> | string | number | boolea
 
 const handleSelectRoom = (socket: SocketType) => (roomId: string) => {
     console.log('user enter the room:', socket.id, `roomId: ${roomId}`);
+
+    const leaveRooms = () => {
+        socket.rooms.forEach(room => { if (customRooms.includes(room)) { socket.leave(room) } });
+    }
+
     try {
         const eventName = "receive_room_selected_value";
-        let message = "";
-        if (roomId === "public channel") {
-            /**
-             * iterate all the joined rooms and leave
-             */
-            message = `Successfully left the rooms: ${Array.from(socket.rooms).join(',')}`;
-            socket.rooms.forEach(item => socket.leave(item));
-        }
-        else {
-            socket.join(roomId);
-            message = `Successfully joined the room: ${roomId}`;
-            // io.to(roomId).emit("receive_room_selected_value", roomId, `Successfully joined the room: ${ roomId } `);
-        }
-        socket.emit(eventName, roomId, message);
+        leaveRooms();  // allow this socket to join only one room at a time
+        if (roomId !== "public channel") socket.join(roomId);
+        socket.emit(eventName, roomId, `socket: ${socket.id} is in the rooms: ${Array.from(socket.rooms).join(',')}`);
     } catch (error) {
         console.error(error)
     }
@@ -79,12 +72,12 @@ io.on('connection', (socket: SocketType) => {
 
     io.emit("receive_online_people_count", io.of("/").sockets.size);
 
-    socket.on("send_msg", handleEmit('receive_msg'));
-    socket.on("dropdown_selected_value", handleEmit('receive_dropdown_selected_value'));
-    socket.on("checkbox_is_checked", handleEmit('receive_checkbox_is_checked'));
-    socket.on("radio_selected_value", handleEmit('receive_radio_selected_value'));
-    socket.on("textarea_value", handleEmit('receive_textarea_value'));
-    socket.on("map_position", handleEmit('receive_map_position'));
+    socket.on("send_msg", handleEmit(socket, 'receive_msg'));
+    socket.on("dropdown_selected_value", handleEmit(socket, 'receive_dropdown_selected_value'));
+    socket.on("checkbox_is_checked", handleEmit(socket, 'receive_checkbox_is_checked'));
+    socket.on("radio_selected_value", handleEmit(socket, 'receive_radio_selected_value'));
+    socket.on("textarea_value", handleEmit(socket, 'receive_textarea_value'));
+    socket.on("map_position", handleEmit(socket, 'receive_map_position'));
     socket.on("room_selected_value", handleSelectRoom(socket));
 
     socket.on("disconnect", handleDisconnect(socket));
