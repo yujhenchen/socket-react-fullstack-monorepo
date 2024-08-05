@@ -56,14 +56,12 @@ const handleSelectRoom = (socket: SocketType) => (roomId: string) => {
     }
 
     try {
-        const eventName = "receive_room_selected_value";
         leaveRooms();  // NOTE: allow this socket to join only one room at a time
         if (roomId !== "public channel") socket.join(roomId);
-        socket.emit(eventName, roomId, `socket: ${socket.id} is in the rooms: ${Array.from(socket.rooms).join(',')}`);
+        socket.emit("receive_room_selected_value", roomId, `socket: ${socket.id} is in the rooms: ${Array.from(socket.rooms).join(',')}`);
     } catch (error) {
         console.error(error)
     }
-
 }
 
 // listen on the connection event for incoming sockets
