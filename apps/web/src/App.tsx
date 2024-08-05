@@ -31,6 +31,7 @@ const trends = [
 ];
 
 const rooms = [
+  { name: "public channel", value: "public channel" },
   { name: "Room A", value: "Room A" },
   { name: "Room B", value: "Room B" },
   { name: "Room C", value: "Room C" },

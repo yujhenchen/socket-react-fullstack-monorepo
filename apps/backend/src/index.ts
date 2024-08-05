@@ -39,6 +39,10 @@ const handleDisconnect = (socket: SocketType) => () => {
 
 const handleEmit = <T extends Record<string, unknown> | string | number | boolean>(eventName: string) => (value: T) => {
     try {
+        /**
+         * broadcast to everyone includes its own when there is no selected room,
+         * otherwise send to the sockets in the room
+         */
         io.emit(eventName, value);
     } catch (error) {
         console.error(error)
@@ -48,9 +52,21 @@ const handleEmit = <T extends Record<string, unknown> | string | number | boolea
 const handleSelectRoom = (socket: SocketType) => (roomId: string) => {
     console.log('user enter the room:', socket.id, `roomId: ${roomId}`);
     try {
-        socket.join(roomId);
-        // io.to(roomId).emit("receive_room_selected_value", roomId, `Successfully joined the room: ${roomId}`);
-        socket.emit("receive_room_selected_value", roomId, `Successfully joined the room: ${roomId}`);
+        const eventName = "receive_room_selected_value";
+        let message = "";
+        if (roomId === "public channel") {
+            /**
+             * iterate all the joined rooms and leave
+             */
+            message = `Successfully left the rooms: ${Array.from(socket.rooms).join(',')}`;
+            socket.rooms.forEach(item => socket.leave(item));
+        }
+        else {
+            socket.join(roomId);
+            message = `Successfully joined the room: ${roomId}`;
+            // io.to(roomId).emit("receive_room_selected_value", roomId, `Successfully joined the room: ${ roomId } `);
+        }
+        socket.emit(eventName, roomId, message);
     } catch (error) {
         console.error(error)
     }
