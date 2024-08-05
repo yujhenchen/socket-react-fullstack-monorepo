@@ -41,7 +41,8 @@ const handleDisconnect = (socket: SocketType) => () => {
 
 const handleEmit = <T extends Record<string, unknown> | string | number | boolean>(socket: SocketType, eventName: string) => (value: T) => {
     try {
-        if (socket.rooms.size > 1) socket.rooms.forEach(room => socket.to(room).emit(eventName, value));
+        // NOTE: `socket.rooms.size > 1` because a socket is always in the public channel
+        if (socket.rooms.size > 1) socket.rooms.forEach(room => socket.to(room).emit(eventName, value));  // TODO: `socket.to(room).emit` this is not able to send to the sender itself
         else io.emit(eventName, value);
     } catch (error) {
         console.error(error)
@@ -57,7 +58,7 @@ const handleSelectRoom = (socket: SocketType) => (roomId: string) => {
 
     try {
         const eventName = "receive_room_selected_value";
-        leaveRooms();  // allow this socket to join only one room at a time
+        leaveRooms();  // NOTE: allow this socket to join only one room at a time
         if (roomId !== "public channel") socket.join(roomId);
         socket.emit(eventName, roomId, `socket: ${socket.id} is in the rooms: ${Array.from(socket.rooms).join(',')}`);
     } catch (error) {
