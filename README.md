@@ -2,6 +2,131 @@
 
 A real-time multi-user full-stack web application built with monorepo using Turbo. The backend utilizes Socket.io and Express.js, while the frontend is crafted with Vite, React, Tailwind CSS, and Flowbite-React. Features include common web elements like dropdown lists, textareas, and radio buttons, along with Google Maps API integration
 
+
+## Features and explanations
+
+### Server side
+
+**apps\backend\src\index.ts**
+
+Create an Express.js application with CORS enabled, running on a specified port and served by an HTTP server:
+```
+const app = express();
+const port = env.port;
+
+app.use(cors());
+
+// create a HTTP server object
+const server = http.createServer(app);
+```
+
+Initialize a new instance of socket.io
+```
+const io = new Server(server, {
+    cors: {
+        origin: env.clientUrl,
+        // credentials: true
+    }
+});
+```
+
+Define socket object type:
+```
+type SocketType = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, Record<string, never>>;
+```
+
+Declare custom room ([an arbitrary channel that sockets can `join` and `leave`](https://socket.io/docs/v4/rooms/)):
+```
+const customRooms = ["Room A", "Room B", "Room C"];
+```
+
+Event handler for handling disconnected event. Use `io.of("/").sockets.size` to get [The number of currently connected clients](https://socket.io/docs/v4/server-api/#attributes-4), emit event `receive_online_people_count` to all the connected clients (including the current one):
+```
+const handleDisconnect = (socket: SocketType) => () => {
+    console.log('A user disconnected:', socket.id, 'io.of("/").sockets.size:', io.of("/").sockets.size);
+    try {
+        io.emit("receive_online_people_count", io.of("/").sockets.size);
+    } catch (error) {
+        console.error(error)
+    }
+}
+```
+
+A generic function to handle socket emit event. Since all the connected clients is joined a default room (public channel), use `socket.rooms.size > 1` to check if the client joins an extra room besides the default room (public channel). Emitting an event to the room if the client joins an extra room, otherwise emitting the event to all teh connected clients (including the current one):
+```
+const handleEmit = <T extends Record<string, unknown> | string | number | boolean>(socket: SocketType, eventName: string) => (value: T) => {
+    try {
+        // NOTE: `socket.rooms.size > 1` because a socket is always in the public channel
+        if (socket.rooms.size > 1) socket.rooms.forEach(room => socket.to(room).emit(eventName, value));  // TODO: `socket.to(room).emit` this is not able to send to the sender itself
+        else io.emit(eventName, value);
+    } catch (error) {
+        console.error(error)
+    }
+}
+```
+
+Handle client choose room event. Define a `leaveRooms` function to let the current socket leave all the custom rooms (the client will still be in the default room, which is the public channel). Emit the event `receive_room_selected_value` with rooms that current socket joins to the current socket:
+```
+const handleSelectRoom = (socket: SocketType) => (roomId: string) => {
+    console.log('user enter the room:', socket.id, `roomId: ${roomId}`);
+
+    const leaveRooms = () => {
+        socket.rooms.forEach(room => { if (customRooms.includes(room)) { socket.leave(room) } });
+    }
+
+    try {
+        leaveRooms();  // NOTE: allow this socket to join only one room at a time
+        if (roomId !== "public channel") socket.join(roomId);
+        socket.emit("receive_room_selected_value", roomId, `socket: ${socket.id} is in the rooms: ${Array.from(socket.rooms).join(',')}`);
+    } catch (error) {
+        console.error(error)
+    }
+}
+```
+
+listen on the connection event for incoming sockets. Use `io.emit("receive_online_people_count", io.of("/").sockets.size);` to broadcast the number of currently connected clients:
+```
+io.on('connection', (socket: SocketType) => {
+    console.log('a user connected', socket.id);
+
+    io.emit("receive_online_people_count", io.of("/").sockets.size);
+
+    socket.on("send_msg", handleEmit(socket, 'receive_msg'));
+    socket.on("dropdown_selected_value", handleEmit(socket, 'receive_dropdown_selected_value'));
+    socket.on("checkbox_is_checked", handleEmit(socket, 'receive_checkbox_is_checked'));
+    socket.on("radio_selected_value", handleEmit(socket, 'receive_radio_selected_value'));
+    socket.on("textarea_value", handleEmit(socket, 'receive_textarea_value'));
+    socket.on("map_position", handleEmit(socket, 'receive_map_position'));
+    socket.on("room_selected_value", handleSelectRoom(socket));
+
+    socket.on("disconnect", handleDisconnect(socket));
+});
+```
+
+Listen to connection errors and handle them:
+```
+io.engine.on("connection_error", (err) => {
+    console.log(err.req);      // the request object
+    console.log(err.code);     // the error code, for example 1
+    console.log(err.message);  // the error message, for example "Session ID unknown"
+    console.log(err.context);  // some additional error context
+});
+```
+
+expose port
+```
+server.listen(port, () => {
+    console.log(`Listening on port ${port}...`);
+});
+```
+
+
+
+
+
+### Client side
+
+
 ## Issues Encountered and Solutions
 Add something
 
