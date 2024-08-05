@@ -25,7 +25,6 @@ app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
-// deal with socket related features
 type SocketType = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, Record<string, never>>;
 
 const customRooms = ["Room A", "Room B", "Room C"];
