@@ -17,7 +17,12 @@ export default function AppRadios({ eventObj, options, title }: Props) {
   );
 
   useEffect(() => {
-    socket.on(eventObj.receive, (value: string) => setSelectedOption(value));
+    socket.on(eventObj.receive, (value: string, status: string) => {
+      if (eventObj.receive === "receive_room_selected_value") {
+        console.log(status);
+      }
+      setSelectedOption(value);
+    });
   }, [socket]);
 
   function handleOnChange(event: ChangeEvent<HTMLInputElement>) {

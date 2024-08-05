@@ -45,6 +45,18 @@ const handleEmit = <T extends Record<string, unknown> | string | number | boolea
     }
 }
 
+const handleSelectRoom = (socket: SocketType) => (roomId: string) => {
+    console.log('user enter the room:', socket.id, `roomId: ${roomId}`);
+    try {
+        socket.join(roomId);
+        // io.to(roomId).emit("receive_room_selected_value", roomId, `Successfully joined the room: ${roomId}`);
+        socket.emit("receive_room_selected_value", roomId, `Successfully joined the room: ${roomId}`);
+    } catch (error) {
+        console.error(error)
+    }
+
+}
+
 // listen on the connection event for incoming sockets
 io.on('connection', (socket: SocketType) => {
     console.log('a user connected', socket.id);
@@ -57,6 +69,7 @@ io.on('connection', (socket: SocketType) => {
     socket.on("radio_selected_value", handleEmit('receive_radio_selected_value'));
     socket.on("textarea_value", handleEmit('receive_textarea_value'));
     socket.on("map_position", handleEmit('receive_map_position'));
+    socket.on("room_selected_value", handleSelectRoom(socket));
 
     socket.on("disconnect", handleDisconnect(socket));
 });
