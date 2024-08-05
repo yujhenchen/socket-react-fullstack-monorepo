@@ -13,7 +13,7 @@ interface Props {
 
 export default function AppRadios({ eventObj, options, title }: Props) {
   const [selectedOption, setSelectedOption] = useState<string>(
-    options[0].value ?? ""
+    options[0]?.value ?? ""
   );
 
   useEffect(() => {
