@@ -3,10 +3,10 @@ import { socket } from "../socket";
 import { Select } from "flowbite-react";
 
 interface Props {
-  items: string[];
+  options: { name: string; value: string }[];
 }
 
-export function AppSelect({ items }: Props) {
+export function AppSelect({ options }: Props) {
   const [selectedValue, setSelectedValue] = useState<string>("");
 
   useEffect(() => {
@@ -26,8 +26,10 @@ export function AppSelect({ items }: Props) {
 
   return (
     <Select value={selectedValue} onChange={handleOnChange}>
-      {items.map((item, index) => (
-        <option key={index}>{item}</option>
+      {options.map((option, index) => (
+        <option key={index} value={option.value}>
+          {option.value}
+        </option>
       ))}
     </Select>
   );
