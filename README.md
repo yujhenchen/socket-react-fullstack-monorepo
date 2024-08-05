@@ -30,17 +30,17 @@ const io = new Server(server, {
 });
 ```
 
-Define socket object type:
+Define the socket object type:
 ```
 type SocketType = Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, Record<string, never>>;
 ```
 
-Declare custom room ([an arbitrary channel that sockets can `join` and `leave`](https://socket.io/docs/v4/rooms/)):
+Declare custom rooms ([an arbitrary channel that sockets can `join` and `leave`](https://socket.io/docs/v4/rooms/)):
 ```
 const customRooms = ["Room A", "Room B", "Room C"];
 ```
 
-Event handler for handling disconnected event. Use `io.of("/").sockets.size` to get [The number of currently connected clients](https://socket.io/docs/v4/server-api/#attributes-4), emit event `receive_online_people_count` to all the connected clients (including the current one):
+Event handler for managing disconnections. Use `io.of("/").sockets.size` to get [The number of currently connected clients](https://socket.io/docs/v4/server-api/#attributes-4), and emit the `receive_online_people_count` event to all connected clients, including the current one.
 ```
 const handleDisconnect = (socket: SocketType) => () => {
     console.log('A user disconnected:', socket.id, 'io.of("/").sockets.size:', io.of("/").sockets.size);
@@ -52,7 +52,7 @@ const handleDisconnect = (socket: SocketType) => () => {
 }
 ```
 
-A generic function to handle socket emit event. Since all the connected clients is joined a default room (public channel), use `socket.rooms.size > 1` to check if the client joins an extra room besides the default room (public channel). Emitting an event to the room if the client joins an extra room, otherwise emitting the event to all teh connected clients (including the current one):
+A generic function to handle socket emit events: check if a client has joined an additional room beyond the default room (public channel) using `socket.rooms.size > 1`; if so, emit the event to that specific room, otherwise, emit the event to all connected clients, including the current one:
 ```
 const handleEmit = <T extends Record<string, unknown> | string | number | boolean>(socket: SocketType, eventName: string) => (value: T) => {
     try {
@@ -65,7 +65,7 @@ const handleEmit = <T extends Record<string, unknown> | string | number | boolea
 }
 ```
 
-Handle client choose room event. Define a `leaveRooms` function to let the current socket leave all the custom rooms (the client will still be in the default room, which is the public channel). Emit the event `receive_room_selected_value` with rooms that current socket joins to the current socket:
+Handle the client’s "choose room" event by defining a `leaveRooms` function that allows the current socket to leave all custom rooms (while remaining in the default public channel), and emit the `receive_room_selected_value` event with the rooms the current socket joins to the socket itself:
 ```
 const handleSelectRoom = (socket: SocketType) => (roomId: string) => {
     console.log('user enter the room:', socket.id, `roomId: ${roomId}`);
@@ -84,7 +84,7 @@ const handleSelectRoom = (socket: SocketType) => (roomId: string) => {
 }
 ```
 
-listen on the connection event for incoming sockets. Use `io.emit("receive_online_people_count", io.of("/").sockets.size);` to broadcast the number of currently connected clients:
+Listen for the connection event to handle incoming sockets, then use `io.emit("receive_online_people_count", io.of("/").sockets.size);` to broadcast the current number of connected clients:
 ```
 io.on('connection', (socket: SocketType) => {
     console.log('a user connected', socket.id);
