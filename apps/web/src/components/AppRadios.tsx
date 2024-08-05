@@ -3,24 +3,27 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { socket } from "../socket";
 
 interface Props {
-  options: string[];
+  eventObj: {
+    emit: string;
+    receive: string;
+  };
+  options: { name: string; value: string }[];
+  title: string;
 }
 
-export default function AppRadios({ options }: Props) {
+export default function AppRadios({ eventObj, options, title }: Props) {
   const [selectedOption, setSelectedOption] = useState<string>(
-    options[0] ?? ""
+    options[0].value ?? ""
   );
 
   useEffect(() => {
-    socket.on("receive_radio_selected_value", (value: string) =>
-      setSelectedOption(value)
-    );
+    socket.on(eventObj.receive, (value: string) => setSelectedOption(value));
   }, [socket]);
 
   function handleOnChange(event: ChangeEvent<HTMLInputElement>) {
     setSelectedOption(event.target.value);
     try {
-      socket.emit("radio_selected_value", event.target.value);
+      socket.emit(eventObj.emit, event.target.value);
     } catch (error) {
       console.error(error);
     }
@@ -28,18 +31,18 @@ export default function AppRadios({ options }: Props) {
 
   return (
     <fieldset className="font-normal text-gray-700 dark:text-gray-400 whitespace-pre">
-      <legend className="mb-4">Choose your favorite one</legend>
+      <legend className="mb-4">{title}</legend>
       {options.map((option, index) => (
         <div key={index} className="flex items-center gap-2">
           <Radio
             id="united-state"
-            name="countries"
-            value={option}
+            name={option.name}
+            value={option.value}
             // defaultChecked
-            checked={selectedOption === option}
+            checked={selectedOption === option.value}
             onChange={handleOnChange}
           />
-          <Label htmlFor="united-state">{option}</Label>
+          <Label htmlFor="united-state">{option.value}</Label>
         </div>
       ))}
     </fieldset>

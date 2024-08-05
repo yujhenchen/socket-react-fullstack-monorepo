@@ -14,12 +14,26 @@ import { AppMap } from "./components/AppMap";
 import AppRating from "./components/AppRating";
 
 const trends = [
-  "Micro Frontends",
-  "WebAssembly (Wasm)",
-  "Component-Driven Development (CDD)",
-  "AI and Machine Learning Integration",
-  "AI and Machine Learning Integration",
-  "Server-Side Rendering (SSR) and Static Site Generation (SSG)",
+  { name: "Micro Frontends", value: "Micro Frontends" },
+  { name: "WebAssembly (Wasm)", value: "WebAssembly (Wasm)" },
+  {
+    name: "Component-Driven Development (CDD)",
+    value: "Component-Driven Development (CDD)",
+  },
+  {
+    name: "AI and Machine Learning Integration",
+    value: "AI and Machine Learning Integration",
+  },
+  {
+    name: "Server-Side Rendering (SSR) and Static Site Generation (SSG)",
+    value: "Server-Side Rendering (SSR) and Static Site Generation (SSG)",
+  },
+];
+
+const rooms = [
+  { name: "Room A", value: "Room A" },
+  { name: "Room B", value: "Room B" },
+  { name: "Room C", value: "Room C" },
 ];
 
 function App() {
@@ -50,9 +64,16 @@ function App() {
         <Messages />
         <MyForm />
       </>,
-      <AppSelect items={trends} />,
+      <AppSelect options={trends} />,
       <AppCheckbox />,
-      <AppRadios options={trends} />,
+      <AppRadios
+        eventObj={{
+          emit: "radio_selected_value",
+          receive: "receive_radio_selected_value",
+        }}
+        options={trends}
+        title="Choose your favorite one"
+      />,
       <AppTextarea />,
       <AppRating />,
     ],
@@ -65,6 +86,18 @@ function App() {
         <ConnectionState />
         <ConnectionManager />
         <Counter />
+      </div>
+
+      <div>
+        <AppRadios
+          eventObj={{
+            emit: "room_selected_value",
+            receive: "receive_room_selected_value",
+          }}
+          options={rooms}
+          title="Choose a room"
+        />
+        ,
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
