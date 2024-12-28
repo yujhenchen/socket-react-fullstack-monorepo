@@ -127,10 +127,6 @@ server.listen(port, () => {
 ### Client side
 
 
-## Issues Encountered and Solutions
-Add something
-
-
 ## Troubleshooting connection issues
 - https://socket.io/docs/v4/troubleshooting-connection-issues/
 
@@ -397,3 +393,12 @@ Refer to the repo and update my files
 
 ### Deal with .env files
 Not yet
+
+
+## Error: tsconfig.json:4:5 - error TS6310: Referenced project '/socket-react-fullstack-monorepo/apps/web/tsconfig.app.json' may not disable emit.
+
+### Root cause
+???
+
+### Solution
+- https://github.com/microsoft/TypeScript/issues/49844
