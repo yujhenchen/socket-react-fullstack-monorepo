@@ -437,6 +437,14 @@ pnpm i
 
 
 
+## Error: After running the command `pnpm run -r build` and `pnpm deploy --filter=backend --prod /prod/backend`, there is no dist/ folder in the /prod/backend
+
+#### Solution
+- https://github.com/pnpm/pnpm/issues/5020
+
+
+
+
 ## Deploy using Docker and Render
 
 ### Working with Docker
