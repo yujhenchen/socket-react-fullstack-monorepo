@@ -568,10 +568,8 @@ index-4wkcNhfW.js:47 Error: server error
 ### Root cause 
 
 
-### Solution
+### Solution 1: Run docker containers on the same network
 - https://docs.docker.com/engine/network/
-
-Run docker containers on the same network
 
 Create a custom, user-defined network
 ```
@@ -588,12 +586,59 @@ Run web container on the created network
 docker run --network=my-net -d -p 5173:5173 web:latest
 ```
 
+#### Full Dockerfile for the mono repo
+```
+FROM node:23-slim AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
+RUN corepack enable
+RUN corepack pnpm --version
+
+RUN pnpm add -g serve
+
+FROM base AS build
+COPY . /usr/src/app
+WORKDIR /usr/src/app
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm run -r build
+RUN pnpm deploy --filter=backend --prod /prod/backend
+RUN pnpm deploy --filter=web --prod /prod/web
+
+# backend
+FROM base AS backend
+COPY --from=build /prod/backend /prod/backend
+WORKDIR /prod/backend
+EXPOSE 8000
+CMD [ "pnpm", "start" ]
+
+# web
+FROM base AS web
+COPY --from=build /prod/web /prod/web
+WORKDIR /prod/web
+EXPOSE 5173
+CMD [ "serve", "-s", "dist", "-l", "5173" ]
+```
+
+
+### Solution 2: to allow docker containers communicate with each other using Render: Blueprint YAML Reference
+- https://render.com/docs/blueprint-spec
+
+
 
 
 ## Deploy using Docker and Render
 
 ### Working with Docker
 - https://pnpm.io/docker
+
+
+### Docker on Render
+- https://render.com/docs/docker
+
+
+
 
 
 
@@ -635,3 +680,90 @@ PNPM_HOME=/pnpm
 # 
 
 ```
+
+
+## How to build docker images and run as containers on Render
+
+### Solution 1: Using render.yaml
+Need credit card info on Render, does not try
+
+
+### Solution 2: use the docker file for mono repo
+this need to run custom build and run command
+
+failed
+
+
+### Solution 3: divide the mono repo docker file into 2 docker files (for backend and web)
+deploy 2 web services separately on Render
+
+failed, client fails to communicate to backend service
+
+#### URLs
+FE
+https://realtime-components-fe.onrender.com/
+
+BE
+https://realtime-components-be.onrender.com/
+
+
+
+
+
+## Error:
+THe deployed web application fails to access the given environment variable `VITE_SERVER_URL`, thus, it use the fallback url `http://localhost:8000/` instead.
+
+In apps/web/src/socket.ts
+```
+...
+
+const URL = import.meta.env.VITE_SERVER_URL || "http://localhost:8000/";
+
+export const socket: Socket = io(URL, {
+    // withCredentials: true,
+});
+
+...
+```
+
+Open the Network tab on Chrome Dev Tool, see the socket client connect url is incorrect:
+
+curl 'http://localhost:8000/socket.io/?EIO=4&transport=polling&t=e7wwuouj' \
+  -H 'sec-ch-ua-platform: "Android"' \
+  -H 'Referer;' \
+  -H 'User-Agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36' \
+  -H 'Accept: */*' \
+  -H 'sec-ch-ua: "Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?1'
+
+### Root cause
+???
+
+
+### Solution 1: not an ideal solution, hardcode backend application url
+In apps/web/.env, provide value `https://realtime-components-be.onrender.com` to `VITE_SERVER_URL`
+```
+...
+
+VITE_SERVER_URL=https://realtime-components-be.onrender.com
+
+...
+```
+
+And commit and push the changes to remote repo, notice that Render redeploy both services (because both services use the same repository)
+
+After finishing deploy, check the Network tab in Chrome Devtool of the frontend application. Seeing the target url that Socket.IO client connects to is correct (which is `https://realtime-components-be.onrender.com` here)
+
+curl 'https://realtime-components-be.onrender.com/socket.io/?EIO=4&transport=polling&t=esr8sgyt' \
+  -H 'accept: */*' \
+  -H 'accept-language: en-US,en;q=0.9,zh-TW;q=0.8,zh;q=0.7' \
+  -H 'origin: https://realtime-components-fe.onrender.com' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://realtime-components-fe.onrender.com/' \
+  -H 'sec-ch-ua: "Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"' \
+  -H 'sec-ch-ua-mobile: ?1' \
+  -H 'sec-ch-ua-platform: "Android"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: cross-site' \
+  -H 'user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36'
