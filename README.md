@@ -439,9 +439,72 @@ pnpm i
 
 ## Error: After running the command `pnpm run -r build` and `pnpm deploy --filter=backend --prod /prod/backend`, there is no dist/ folder in the /prod/backend
 
-#### Solution
+### Root cause
+???
+
+### Solution
 - https://github.com/pnpm/pnpm/issues/5020
 
+Add files in apps/backend/package.json
+```
+ "files": [
+    "dist"
+  ],
+```
+
+
+
+## Error: `Error: Cannot find module 'tslib'`
+- https://docs.docker.com/reference/cli/docker/container/logs/
+
+After run the container with the command
+```
+docker run -d -p 8000:8000 backend:latest
+```
+
+And run the command to check logs
+```
+docker logs containerID
+```
+
+### Root cause 
+apps/backend/package.json package tslib is in devDependencies, however, it should be in dependencies according to the npm tslib url 
+```
+...
+
+"devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.12",
+    "nodemon": "^3.1.4",
+    "tslib": "^2.6.3",
+    "typescript": "^5.3.3"
+  },
+
+...
+```
+
+### Solution
+- https://www.npmjs.com/package/tslib
+
+Move tslib into dependencies, and run `pnpm i` to generate pnpm-lock.yaml base on the new dependencies in the apps/backend/package.json.
+
+```
+...
+
+"dependencies": {
+    "tslib": "^2.6.3",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5",
+    "ts-node": "^10.9.2",
+    "zod": "^3.23.8"
+  }
+
+...
+```
+
+Build and docker image again
 
 
 
