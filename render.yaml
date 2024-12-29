@@ -1,0 +1,22 @@
+services:
+  - type: web
+    runtime: docker
+    name: backend
+    envVars:
+      - key: SERVER_PORT
+        value: "8000"
+      - key: CLIENT_URL
+        value: "http://frontend.onrender.com"
+    dockerCommand: |
+      docker build . --target backend --tag backend:latest && \
+      docker run -d -p 8000:8000 backend:latest
+
+  - type: web
+    runtime: docker
+    name: frontend
+    envVars:
+      - key: VITE_SERVER_URL
+        value: "http://backend.onrender.com"
+    dockerCommand: |
+      docker build . --target web --tag web:latest && \
+      docker run -d -p 5173:5173 web:latest
