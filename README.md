@@ -507,6 +507,88 @@ Move tslib into dependencies, and run `pnpm i` to generate pnpm-lock.yaml base o
 Build and docker image again
 
 
+## Error: ERR_PNPM_NO_SCRIPT_OR_SERVER  Missing script start or file server.js
+After build and run the web container, run `docker logs containerID`, see this error.
+
+### Root cause
+There is no `start` in scripts in apps/web/package.json
+
+```
+"scripts": {
+    "dev": "vite --clearScreen false",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint \"src/**/*.ts\""
+  },
+```
+
+### Solution
+- https://www.npmjs.com/package/serve
+
+Use serve
+
+Install serve globally in docker file
+```
+RUN pnpm add -g serve
+```
+
+Make sure the port is the same as the port this is set in Vite config
+
+Change this from
+```
+EXPOSE 8001
+CMD [ "pnpm", "start" ]
+```
+
+To (since the default port is 5173, if need to change the default, ned to update apps/web/vite.config.ts)
+```
+EXPOSE 5173
+CMD [ "serve", "-s", "dist", "-l", "5173" ]
+```
+
+Build and run a Docker container in detached mode (`-d`), mapping port 5173 on the host to port 5173 in the container, using the `web:latest` image.
+```
+docker run -d -p 5173:5173 web:latest
+```
+
+
+## Error: web application fails to communicate with the running server on another container (http://localhost:8000/)
+server error
+index-4wkcNhfW.js:47 Error: server error
+    at Ox._onPacket (index-4wkcNhfW.js:40:76516)
+    at Ie.emit (index-4wkcNhfW.js:40:62436)
+    at xx.onPacket (index-4wkcNhfW.js:40:64545)
+    at r (index-4wkcNhfW.js:40:65633)
+    at Array.forEach (<anonymous>)
+    at xx.onData (index-4wkcNhfW.js:40:65675)
+    at Ie.emit (index-4wkcNhfW.js:40:62436)
+    at Bt._onLoad (index-4wkcNhfW.js:40:68578)
+    at n.onreadystatechange (index-4wkcNhfW.js:40:68005)
+
+### Root cause 
+
+
+### Solution
+- https://docs.docker.com/engine/network/
+
+Run docker containers on the same network
+
+Create a custom, user-defined network
+```
+docker network create -d bridge my-net
+```
+
+Run backend container on the created network
+```
+docker run --network=my-net -d -p 8000:8000 backend:latest
+```
+
+Run web container on the created network 
+```
+docker run --network=my-net -d -p 5173:5173 web:latest
+```
+
+
 
 ## Deploy using Docker and Render
 
@@ -515,3 +597,41 @@ Build and docker image again
 
 
 
+## Debug a running Docker container: docker container exec
+- https://docs.docker.com/reference/cli/docker/container/exec/
+
+For example, check if an environment variable exists in a running docker container.
+
+List all running docker container to see the container ID of the target one
+```
+docker ps
+```
+
+Allocate a pseudo-TTY of the target container using the container ID (ae980e452cbe is the container ID)
+
+```
+docker exec -it ae980e452cbe /bin/sh
+```
+
+List all the environment variables
+```
+env
+```
+
+Example output 
+
+```
+
+# env             
+NODE_VERSION=23.5.0
+HOSTNAME=ae980e452cbe
+YARN_VERSION=1.22.22
+HOME=/root
+TERM=xterm
+PATH=/pnpm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+CLIENT_URL=http://localhost:5173
+PWD=/prod/backend
+PNPM_HOME=/pnpm
+# 
+
+```
