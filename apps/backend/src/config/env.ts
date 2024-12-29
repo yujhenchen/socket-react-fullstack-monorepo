@@ -7,7 +7,7 @@ const envSchema = z.object({
 });
 
 const envServer = envSchema.safeParse({
-    env: process.env.NODE_ENV,
+    // env: process.env.NODE_ENV,
     port: process.env.SERVER_PORT,
     clientUrl: process.env.CLIENT_URL
 });
