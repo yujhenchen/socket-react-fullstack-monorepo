@@ -122,15 +122,14 @@ server.listen(port, () => {
 
 
 
+---
 
 
-### Client side
+
+## Problems and Solutions: Develop phase
 
 
-## Troubleshooting connection issues
-- https://socket.io/docs/v4/troubleshooting-connection-issues/
-
-### Error `Property 'description' does not exist on type 'Error'.ts` and `Property 'context' does not exist on type 'Error'.ts`
+### Error: `Property 'description' does not exist on type 'Error'.ts` and `Property 'context' does not exist on type 'Error'.ts`
 When monitor `connect_error` event at client side
 ```
  useEffect(() => {
@@ -151,15 +150,17 @@ When monitor `connect_error` event at client side
   }, []);
 ```
 
+
 #### Root cause
-???
+TBC
+
 
 #### Solution
-???
+TBC
 
 
 
-## How to handle disconnect event and broadcast to all clients (including the one that is going to disconnect)
+### How to: Handle disconnect event and broadcast to all clients (including the one that is going to disconnect)
 When monitoring and handling the `disconnect` event as below in the function `handleDisconnect`, `io.emit("receive_online_people_count", count);` fails on emit event to all clients. Because the current user has disconnected.
 ```
 const handleDisconnect = (socket: SocketType) => () => {
@@ -181,10 +182,8 @@ io.on('connection', (socket: SocketType) => {
 });
 ```
 
-### Root cause
-???
 
-### Solution
+#### Solution
 - https://socket.io/docs/v4/server-api/#engineclientscount
 
 Use `io.of("/").sockets.size` instead of `io.engine.clientsCount`.
@@ -196,78 +195,18 @@ const handleDisconnect = (socket: SocketType) => () => {
     
     ...
 }
-
 ```
 
 
 
-## A Beginner's Guide to WebSockets
-- https://www.youtube.com/watch?v=8ARodQ4Wlf4
-	- use Chrome dev to debug, WS -> Frames
+### Error: `No 'Access-Control-Allow-Origin' header is present on the requested resource`
 
 
-## Not need to use dotenv after Node.js 20.6.0
-- https://medium.com/@tony.infisical/stop-using-dotenv-in-node-js-v20-6-0-8febf98f6314
-- https://dev.to/cjreads665/nodejs-2060-say-goodbye-to-dotenv-2ijl
+#### Root cause
+TBC
 
 
-
-## Validate Environment Variables With Zod
-- https://catalins.tech/validate-environment-variables-with-zod/
-- https://creatures.sh/blog/env-type-safety-and-validation/
-
-
-
-## Full stack project structure
-- https://github.com/idurar/idurar-erp-crm
-
-### Use bun with vite
-- https://vitejs.dev/guide/
-- https://bun.sh/guides/ecosystem/vite
-
-
-
-## Use `process.env` with Vite frontend project
-- https://vitejs.dev/guide/env-and-mode
-
-Use
-```
-import.meta.env.NODE_ENV
-```
-
-For example
-```
-const URL = import.meta.env.NODE_ENV === 'production' ? undefined : 'http://localhost:4000';
-```
-
-
-
-## During development, you need to enable CORS on your server
-- https://socket.io/how-to/use-with-react
-- https://socket.io/docs/v4/handling-cors
-
-server side
-```
-const io = new Server(server, {
-    cors: {
-        origin: env.clientUrl,
-        // credentials: true
-    }
-});
-```
-
-client side
-```
-// "undefined" means the URL will be computed from the `window.location` object
-const URL = import.meta.env.VITE_NODE_ENV === undefined ? 'TODO: add production url' : import.meta.env.VITE_SERVER_URL;
-
-export const socket = io(URL, {
-    // withCredentials: true,
-});
-```
-
-
-### Solution to the error `No 'Access-Control-Allow-Origin' header is present on the requested resource`
+#### Solution
 - https://socket.io/docs/v4/handling-cors
 
 ```
@@ -315,41 +254,19 @@ server.listen(port, () => {
 
 
 
-## Run and Debug Vite using VSCode
-- https://mfcallahan.com/2023/04/24/configuring-vs-code-for-vue-js-development-using-vite/
-
-
-
-## Building a Real-Time Chat App with Next.js, Socket.io, and TypeScript
-- https://stackademic.com/blog/building-a-real-time-chat-app-with-next-js-socket-io-and-typescript
-
-
-
-## Setup monorepos using Turborepo with Vite and Express.js and TypeScript using pnpm
-- https://turbo.build/repo/docs
-- https://github.com/tanishqmanuja/todos-react-elysia/tree/main
-
-
-### Vite
-```
-pnpm dlx create-turbo@latest -e with-vite
-```
-
-#### Error `The esbuild loader for this file is currently set to "js" but it must be set to "jsx" to be able to parse JSX syntax. You can use "loader: { '.js': 'jsx' }" to do that`
-
+### Error: `The esbuild loader for this file is currently set to "js" but it must be set to "jsx" to be able to parse JSX syntax. You can use "loader: { '.js': 'jsx' }" to do that`
 Error when run `pnpm run dev` after creating and using a React TypeScript component App.tsx
 ![image](https://hackmd.io/_uploads/ryUULeRdR.png)
 
 
-##### Root cause
+#### Root cause
 Default Turborepo with Vite for React component files file extension using **.ts** instead of **.tsx** (which are the default generated files when create a new vite project with React and TypeScript at Vite version `5.3.4`)
 
 
-##### Solution
+#### Solution
 Create a Vite React project, copy files **tsconfig.app.json**, **tsconfig.node.json**, **tsconfig.json**, and **vite.config.ts** under the current repo **./apps/web/**.
 
 And then add missing dependencies into package.json file.
-
 
 ###### Steps
 Run command 
@@ -365,53 +282,54 @@ Choose the target tech stack
 Copy above files into the current repo
 
 
-### Express.js
 
-Use nodemon
-- https://github.com/remy/nodemon
-
-
-#### Error 
+### Error 
 ![image](https://hackmd.io/_uploads/HkYdGX0dR.png)
 
 
-##### Root cause
-??? 
+#### Root cause
+TBC
 
-##### Solution
+
+#### Solution
 - https://github.com/bobbyhadz/typescript-unknown-file-extension-error/blob/main/package.json
 
-remove "type": "module", in package.json ??
-add in  tsconfig.json ??
+remove "type": "module", in package.json
+add in  tsconfig.json
 
-###### Steps
+TBC
+
+##### Steps
 Refer to the repo and update my files
 - tsconfig.json
 - package.json
 
 
+---
 
-### Deal with .env files
-Not yet
+## Problems and Solutions: Build and Deploy phases
+
+### Error: `tsconfig.json:4:5 - error TS6310: Referenced project '/socket-react-fullstack-monorepo/apps/web/tsconfig.app.json' may not disable emit`
+
+#### Root cause
+TBC
 
 
-## Error: tsconfig.json:4:5 - error TS6310: Referenced project '/socket-react-fullstack-monorepo/apps/web/tsconfig.app.json' may not disable emit.
-
-### Root cause
-???
-
-### Solution
+#### Solution
 - https://github.com/microsoft/TypeScript/issues/49844
 
 
 
-## Error: ERR_PNPM_LOCKFILE_BREAKING_CHANGE  Lockfile /usr/src/app/pnpm-lock.yaml not compatible with current pnpm
+### Error: `ERR_PNPM_LOCKFILE_BREAKING_CHANGE  Lockfile /usr/src/app/pnpm-lock.yaml not compatible with current pnpm`
+
 During building docker file `RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile`
 
-### Root cause
+
+#### Root cause
 Because `RUN corepack enable` in the Dockerfile downloads the pnpm version 8.15.6 (TODO: add image), but the pnpm-lock.yaml file that is generated by running `pnpm i` is generated by the local installed pnpm package (by `npm install -g pnpm`), which the version is 9.15.1. SO the version mismatch causes the error.
 
-### Solution
+
+#### Solution
 - https://github.com/pnpm/pnpm/issues/6609
 
 Change (downgrade) the version of local installed pnpm to match the target version that corepack downloads in the Dockerfile, which is 8.15.6. And generate a new pnpm-lock.yaml using the target version of pnpm:
@@ -437,12 +355,12 @@ pnpm i
 
 
 
-## Error: After running the command `pnpm run -r build` and `pnpm deploy --filter=backend --prod /prod/backend`, there is no dist/ folder in the /prod/backend
+### Error: After running the command `pnpm run -r build` and `pnpm deploy --filter=backend --prod /prod/backend`, there is no dist/ folder in the /prod/backend
 
-### Root cause
-???
+#### Root cause
+TBC
 
-### Solution
+#### Solution
 - https://github.com/pnpm/pnpm/issues/5020
 
 Add files in apps/backend/package.json
@@ -454,7 +372,7 @@ Add files in apps/backend/package.json
 
 
 
-## Error: `Error: Cannot find module 'tslib'`
+### Error: `Error: Cannot find module 'tslib'`
 - https://docs.docker.com/reference/cli/docker/container/logs/
 
 After run the container with the command
@@ -467,7 +385,7 @@ And run the command to check logs
 docker logs containerID
 ```
 
-### Root cause 
+#### Root cause 
 apps/backend/package.json package tslib is in devDependencies, however, it should be in dependencies according to the npm tslib url 
 ```
 ...
@@ -484,7 +402,7 @@ apps/backend/package.json package tslib is in devDependencies, however, it shoul
 ...
 ```
 
-### Solution
+#### Solution
 - https://www.npmjs.com/package/tslib
 
 Move tslib into dependencies, and run `pnpm i` to generate pnpm-lock.yaml base on the new dependencies in the apps/backend/package.json.
@@ -507,10 +425,11 @@ Move tslib into dependencies, and run `pnpm i` to generate pnpm-lock.yaml base o
 Build and docker image again
 
 
-## Error: ERR_PNPM_NO_SCRIPT_OR_SERVER  Missing script start or file server.js
+
+### Error: ERR_PNPM_NO_SCRIPT_OR_SERVER  Missing script start or file server.js
 After build and run the web container, run `docker logs containerID`, see this error.
 
-### Root cause
+#### Root cause
 There is no `start` in scripts in apps/web/package.json
 
 ```
@@ -522,7 +441,7 @@ There is no `start` in scripts in apps/web/package.json
   },
 ```
 
-### Solution
+#### Solution
 - https://www.npmjs.com/package/serve
 
 Use serve
@@ -552,7 +471,7 @@ docker run -d -p 5173:5173 web:latest
 ```
 
 
-## Error: web application fails to communicate with the running server on another container (http://localhost:8000/)
+### Error: web application fails to communicate with the running server on another container (http://localhost:8000/)
 server error
 index-4wkcNhfW.js:47 Error: server error
     at Ox._onPacket (index-4wkcNhfW.js:40:76516)
@@ -565,10 +484,11 @@ index-4wkcNhfW.js:47 Error: server error
     at Bt._onLoad (index-4wkcNhfW.js:40:68578)
     at n.onreadystatechange (index-4wkcNhfW.js:40:68005)
 
-### Root cause 
+#### Root cause 
+TBC
 
 
-### Solution 1: Run docker containers on the same network
+#### Solution 1: Run docker containers on the same network
 - https://docs.docker.com/engine/network/
 
 Create a custom, user-defined network
@@ -586,7 +506,7 @@ Run web container on the created network
 docker run --network=my-net -d -p 5173:5173 web:latest
 ```
 
-#### Full Dockerfile for the mono repo
+##### Full Dockerfile for the mono repo
 ```
 FROM node:23-slim AS base
 ENV PNPM_HOME="/pnpm"
@@ -622,27 +542,18 @@ CMD [ "serve", "-s", "dist", "-l", "5173" ]
 ```
 
 
-### Solution 2: to allow docker containers communicate with each other using Render: Blueprint YAML Reference
+#### Solution 2: to allow docker containers communicate with each other using Render: Blueprint YAML Reference
 - https://render.com/docs/blueprint-spec
 
 
 
 
-## Deploy using Docker and Render
-
-### Working with Docker
-- https://pnpm.io/docker
-
-
-### Docker on Render
-- https://render.com/docs/docker
 
 
 
 
 
-
-## Debug a running Docker container: docker container exec
+### How to: Debug a running Docker container: docker container exec
 - https://docs.docker.com/reference/cli/docker/container/exec/
 
 For example, check if an environment variable exists in a running docker container.
@@ -682,24 +593,24 @@ PNPM_HOME=/pnpm
 ```
 
 
-## How to build docker images and run as containers on Render
+### How to: Build docker images and run as containers on Render
 
-### Solution 1: Using render.yaml
+#### Solution 1: Using render.yaml
 Need credit card info on Render, does not try
 
 
-### Solution 2: use the docker file for mono repo
+#### Solution 2: use the docker file for mono repo
 this need to run custom build and run command
 
 failed
 
 
-### Solution 3: divide the mono repo docker file into 2 docker files (for backend and web)
+#### Solution 3: divide the mono repo docker file into 2 docker files (for backend and web)
 deploy 2 web services separately on Render
 
 failed, client fails to communicate to backend service
 
-#### URLs
+##### URLs
 FE
 https://realtime-components-fe.onrender.com/
 
@@ -710,8 +621,8 @@ https://realtime-components-be.onrender.com/
 
 
 
-## Error:
-THe deployed web application fails to access the given environment variable `VITE_SERVER_URL`, thus, it use the fallback url `http://localhost:8000/` instead.
+### Error: unable to access environment variables that are set to the Vite web service on Render
+The deployed web application fails to access the given environment variable `VITE_SERVER_URL`, thus, it uses the fallback url `http://localhost:8000/` instead.
 
 In apps/web/src/socket.ts
 ```
@@ -736,11 +647,11 @@ curl 'http://localhost:8000/socket.io/?EIO=4&transport=polling&t=e7wwuouj' \
   -H 'sec-ch-ua: "Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"' \
   -H 'sec-ch-ua-mobile: ?1'
 
-### Root cause
-???
+#### Root cause
+TBC
 
 
-### Solution 1: not an ideal solution, hardcode backend application url
+#### Solution 1: not an ideal solution, hardcode backend application url
 In apps/web/.env, provide value `https://realtime-components-be.onrender.com` to `VITE_SERVER_URL`
 ```
 ...
@@ -767,3 +678,126 @@ curl 'https://realtime-components-be.onrender.com/socket.io/?EIO=4&transport=pol
   -H 'sec-fetch-mode: cors' \
   -H 'sec-fetch-site: cross-site' \
   -H 'user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36'
+
+  TODO: will remove the .env file in the frontend project, and provide the url in the frontend project Environment - Environment Variables on Render fix this problem?
+
+
+
+---
+
+
+
+## Other resources
+
+### A Beginner's Guide to WebSockets
+- https://www.youtube.com/watch?v=8ARodQ4Wlf4
+	- use Chrome dev to debug, WS -> Frames
+
+
+
+### Not need to use dotenv after Node.js 20.6.0
+- https://medium.com/@tony.infisical/stop-using-dotenv-in-node-js-v20-6-0-8febf98f6314
+- https://dev.to/cjreads665/nodejs-2060-say-goodbye-to-dotenv-2ijl
+
+
+
+### Validate Environment Variables With Zod
+- https://catalins.tech/validate-environment-variables-with-zod/
+- https://creatures.sh/blog/env-type-safety-and-validation/
+
+
+
+### Full stack project structure
+- https://github.com/idurar/idurar-erp-crm
+
+
+
+### Use bun with vite
+- https://vitejs.dev/guide/
+- https://bun.sh/guides/ecosystem/vite
+
+
+
+### Use `process.env` with Vite frontend project
+- https://vitejs.dev/guide/env-and-mode
+
+Use
+```
+import.meta.env.NODE_ENV
+```
+
+For example
+```
+const URL = import.meta.env.NODE_ENV === 'production' ? undefined : 'http://localhost:4000';
+```
+
+
+
+### During development, you need to enable CORS on your server
+- https://socket.io/how-to/use-with-react
+- https://socket.io/docs/v4/handling-cors
+
+server side
+```
+const io = new Server(server, {
+    cors: {
+        origin: env.clientUrl,
+        // credentials: true
+    }
+});
+```
+
+client side
+```
+// "undefined" means the URL will be computed from the `window.location` object
+const URL = import.meta.env.VITE_NODE_ENV === undefined ? 'TODO: add production url' : import.meta.env.VITE_SERVER_URL;
+
+export const socket = io(URL, {
+    // withCredentials: true,
+});
+```
+
+
+
+### Troubleshooting connection issues
+- https://socket.io/docs/v4/troubleshooting-connection-issues/
+
+
+
+### Run and Debug Vite using VSCode
+- https://mfcallahan.com/2023/04/24/configuring-vs-code-for-vue-js-development-using-vite/
+
+
+
+### Building a Real-Time Chat App with Next.js, Socket.io, and TypeScript
+- https://stackademic.com/blog/building-a-real-time-chat-app-with-next-js-socket-io-and-typescript
+
+
+
+### Setup monorepos using Turborepo with Vite and Express.js and TypeScript using pnpm
+- https://turbo.build/repo/docs
+- https://github.com/tanishqmanuja/todos-react-elysia/tree/main
+
+
+
+### Vite with turbo
+```
+pnpm dlx create-turbo@latest -e with-vite
+```
+
+
+
+### Express.js
+Use nodemon
+- https://github.com/remy/nodemon
+
+
+
+### Deploy using Docker and Render
+
+#### Working with Docker
+- https://pnpm.io/docker
+
+#### Docker on Render
+- https://render.com/docs/docker
+
